@@ -866,12 +866,15 @@ function addAbcRank(rows) {
 }
 
 function buildKpiFromRows(rows, prevRows, container) {
-  const s = rows.reduce((a,r) => a+r.price, 0);
-  const m = rows.reduce((a,r) => a+r.margin, 0);
-  const o = rows.length;
+  const mainRows = rows.filter(r => r.type === '메인' || r.type === '환불/취소');
+  const s  = rows.reduce((a,r) => a+r.price, 0);          // 매출 = 메인+구성품
+  const m  = mainRows.reduce((a,r) => a+r.margin, 0);     // 마진 = 메인만
+  const o  = mainRows.length;                              // 주문수 = 메인만
+
+  const prevMainRows = prevRows ? prevRows.filter(r => r.type === '메인' || r.type === '환불/취소') : [];
   const ps = prevRows ? prevRows.reduce((a,r) => a+r.price, 0) : 0;
-  const pm = prevRows ? prevRows.reduce((a,r) => a+r.margin, 0) : 0;
-  const po = prevRows ? prevRows.length : 0;
+  const pm = prevMainRows.reduce((a,r) => a+r.margin, 0);
+  const po = prevMainRows.length;
   const mp = s > 0 ? m / s : 0;
   const aov = o > 0 ? s / o : 0;
 
@@ -906,19 +909,22 @@ function renderHome() {
   const ym   = (yr % 100) * 100 + mo;
   const pmYm = mo === 1 ? ((yr-1) % 100)*100+12 : (yr % 100)*100+(mo-1);
 
+  const mtdMain  = RAW.filter(r => Number(r.yearMonth) === ym && (r.type==='메인'||r.type==='환불/취소'));
+  const prevMain = RAW.filter(r => Number(r.yearMonth) === pmYm && (r.type==='메인'||r.type==='환불/취소'));
+  const ytdMain  = RAW.filter(r => Number(r.year) === yr && (r.type==='메인'||r.type==='환불/취소'));
   const mtdRows  = RAW.filter(r => Number(r.yearMonth) === ym);
   const prevRows = RAW.filter(r => Number(r.yearMonth) === pmYm);
   const ytdRows  = RAW.filter(r => Number(r.year) === yr);
 
   const mS = mtdRows.reduce((a,r)=>a+r.price,0);
-  const mM = mtdRows.reduce((a,r)=>a+r.margin,0);
-  const mO = mtdRows.length;
+  const mM = mtdMain.reduce((a,r)=>a+r.margin,0);
+  const mO = mtdMain.length;
   const pS = prevRows.reduce((a,r)=>a+r.price,0);
-  const pM = prevRows.reduce((a,r)=>a+r.margin,0);
-  const pO = prevRows.length;
+  const pM = prevMain.reduce((a,r)=>a+r.margin,0);
+  const pO = prevMain.length;
   const yS = ytdRows.reduce((a,r)=>a+r.price,0);
-  const yM = ytdRows.reduce((a,r)=>a+r.margin,0);
-  const yO = ytdRows.length;
+  const yM = ytdMain.reduce((a,r)=>a+r.margin,0);
+  const yO = ytdMain.length;
   const mp  = mS > 0 ? mM/mS : 0;
   const ymp = yS > 0 ? yM/yS : 0;
 

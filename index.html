@@ -739,7 +739,8 @@ async function loadAll() {
     showErr('');
     const res = await fetch(`${API_URL}?type=all`);
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const d = await res.json();
+    const text = await res.text();
+    const d = JSON.parse(text);
     if (d.error) throw new Error(d.error);
 
     RAW     = d.main   || [];

@@ -627,7 +627,7 @@ Chart.register(ChartDataLabels);
 /* ══════════════════════════════════
    CONFIG
 ══════════════════════════════════ */
-const API_URL = 'https://script.google.com/macros/s/AKfycbxnaTh0G1fLALJud-7cNrOZsVKXP3bfPZz2TZUBheK364827CYQA5u51ebQOy9Z1dt8CA/exec';
+const API_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
 /* ══════════════════════════════════
    STATE
@@ -720,8 +720,8 @@ function getFilter() {
 function filterRows(rows) {
   const {year, month} = getFilter();
   return rows.filter(r => {
-    if (year && r.year !== year) return false;
-    if (month && r.month !== month) return false;
+    if (year && Number(r.year) !== Number(year)) return false;
+    if (month && Number(r.month) !== Number(month)) return false;
     return true;
   });
 }
@@ -906,9 +906,9 @@ function renderHome() {
   const ym   = yr * 100 + mo;
   const pmYm = mo === 1 ? (yr-1)*100+12 : yr*100+(mo-1);
 
-  const mtdRows  = RAW.filter(r => r.yearMonth === ym);
-  const prevRows = RAW.filter(r => r.yearMonth === pmYm);
-  const ytdRows  = RAW.filter(r => r.year === yr);
+  const mtdRows  = RAW.filter(r => Number(r.yearMonth) === ym);
+  const prevRows = RAW.filter(r => Number(r.yearMonth) === pmYm);
+  const ytdRows  = RAW.filter(r => Number(r.year) === yr);
 
   const mS = mtdRows.reduce((a,r)=>a+r.price,0);
   const mM = mtdRows.reduce((a,r)=>a+r.margin,0);
@@ -959,7 +959,7 @@ function renderHome() {
 
 function renderDailyChart(ym) {
   const yr = Math.floor(ym/100), mo = ym%100;
-  const daily = RAW.filter(r => r.yearMonth === ym);
+  const daily = RAW.filter(r => Number(r.yearMonth) === ym);
   const map = {};
   daily.forEach(r => {
     if (!r.date) return;
@@ -1007,7 +1007,7 @@ function renderDailyChart(ym) {
 function renderMonthly() {
   if (!RAW.length) return;
   const {year} = getFilter();
-  const rows = year ? RAW.filter(r => r.year === year) : RAW;
+  const rows = year ? RAW.filter(r => Number(r.year) === year) : RAW;
   const monthly = groupByYm(rows);
 
   const totalS = monthly.reduce((a,r)=>a+r.sales,0);
@@ -1064,7 +1064,7 @@ function renderMonthly() {
   const monthChannelData = {};
   channels.forEach(ch => {
     monthChannelData[ch] = monthly.map(ym => {
-      return rows.filter(r=>r.yearMonth===ym.ym&&r.channel===ch).reduce((a,r)=>a+r.price,0);
+      return rows.filter(r=>Number(r.yearMonth)===ym.ym&&r.channel===ch).reduce((a,r)=>a+r.price,0);
     });
   });
 
@@ -1176,7 +1176,7 @@ function renderBrand() {
       datasets:top5.map((b,i)=>({
         label:b,
         data:monthly.map(ym=>{
-          return rows.filter(r=>r.yearMonth===ym.ym&&r.brand===b).reduce((a,r)=>a+r.price,0);
+          return rows.filter(r=>Number(r.yearMonth)===ym.ym&&r.brand===b).reduce((a,r)=>a+r.price,0);
         }),
         borderColor:COLORS[i],borderWidth:2,pointRadius:3,tension:0.3,fill:false,
         datalabels:{display:false}
@@ -1265,7 +1265,7 @@ function renderItems() {
       labels:monthly.map(r=>fmtYm(r.ym)),
       datasets:top5.map((b,i)=>({
         label:b,
-        data:monthly.map(ym=>rows.filter(r=>r.yearMonth===ym.ym&&r.item===b).reduce((a,r)=>a+r.price,0)),
+        data:monthly.map(ym=>rows.filter(r=>Number(r.yearMonth)===ym.ym&&r.item===b).reduce((a,r)=>a+r.price,0)),
         borderColor:COLORS[i],borderWidth:2,pointRadius:3,tension:0.3,fill:false,
         datalabels:{display:false}
       }))
@@ -1356,8 +1356,8 @@ function renderPurchase() {
   if (!RAW_ALL.length) return;
   const {year, month} = getFilter();
   const allRows = RAW_ALL.filter(r => {
-    if (year && r.year !== year) return false;
-    if (month && r.month !== month) return false;
+    if (year && Number(r.year) !== year) return false;
+    if (month && Number(r.month) !== month) return false;
     return true;
   });
 
@@ -1446,10 +1446,10 @@ function renderYoy() {
   const d25 = {}, d26 = {};
   months.forEach(m => { d25[m]={sales:0,margin:0,orders:0}; d26[m]={sales:0,margin:0,orders:0}; });
   RAW.forEach(r => {
-    if (r.year===2025 && r.month>=1&&r.month<=12) {
+    if (Number(r.year)===2025 && Number(r.month)>=1&&Number(r.month)<=12) {
       d25[r.month].sales+=r.price; d25[r.month].margin+=r.margin; d25[r.month].orders+=1;
     }
-    if (r.year===2026 && r.month>=1&&r.month<=12) {
+    if (Number(r.year)===2026 && Number(r.month)>=1&&Number(r.month)<=12) {
       d26[r.month].sales+=r.price; d26[r.month].margin+=r.margin; d26[r.month].orders+=1;
     }
   });
@@ -1539,8 +1539,8 @@ function renderTop10() {
   const mo = month || getThisMonth();
   const ym = yr*100+mo;
 
-  const monthRows = RAW.filter(r=>r.yearMonth===ym);
-  const ytdRows   = RAW.filter(r=>r.year===yr);
+  const monthRows = RAW.filter(r=>Number(r.yearMonth)===ym);
+  const ytdRows   = RAW.filter(r=>Number(r.year)===yr);
 
   document.getElementById('top10MonthTitle').textContent = `${yr}년 ${mo}월 TOP 10`;
   document.getElementById('top10YtdTitle').textContent   = `${yr}년 누계 TOP 10`;

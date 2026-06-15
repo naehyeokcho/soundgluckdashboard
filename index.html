@@ -737,14 +737,13 @@ async function loadAll() {
   startLoading();
   try {
     showErr('');
-    const res = await fetch(`${API_URL}?type=all`);
+    const res = await fetch(API_URL + '?t=' + Date.now());
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    const d = JSON.parse(text);
-    if (d.error) throw new Error(d.error);
+    const json = await res.json();
+    if (json.status !== 'ok') throw new Error(json.message || '데이터 오류');
 
-    RAW     = d.main   || [];
-    RAW_ALL = d.all    || [];
+    RAW     = json.main || [];
+    RAW_ALL = json.all  || [];
 
     buildYearSelector();
 

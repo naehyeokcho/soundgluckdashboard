@@ -1363,10 +1363,8 @@ function renderPurchase() {
   });
 
   // 외부매입 집계
-  const extRows = allRows.filter(r => r.stockType === '외부매입' && r.extCost > 0);
-  const ownRows = allRows.filter(r => r.stockType === '자사재고' && r.assetCost > 0);
-  const totalExt = extRows.reduce((a,r)=>a+r.extCost,0);
-  const totalOwn = ownRows.reduce((a,r)=>a+r.assetCost,0);
+  const totalExt = allRows.reduce((a,r)=>a+(r.extCost||0),0);
+  const totalOwn = allRows.reduce((a,r)=>a+(r.assetCost||0),0);
   const totalAll = totalExt + totalOwn;
 
   document.getElementById('kpiPurchase').innerHTML = `
@@ -1387,8 +1385,8 @@ function renderPurchase() {
     const k = r.yearMonth;
     if (!k) return;
     if (!monthlyExt[k]) { monthlyExt[k]=0; monthlyOwn[k]=0; }
-    if (r.stockType==='외부매입') monthlyExt[k] += r.extCost||0;
-    if (r.stockType==='자사재고') monthlyOwn[k] += r.assetCost||0;
+    monthlyExt[k] += r.extCost||0;
+    monthlyOwn[k] += r.assetCost||0;
   });
   const ymKeys = [...new Set([...Object.keys(monthlyExt)])].sort();
 

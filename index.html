@@ -3,40 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOUNDGLUCK Dashboard v3.1</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>SOUNDGLUCK Dashboard v3.2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F1F5F9;
-  --surface:#FFFFFF;
-  --border:#E2E8F0;
-  --border2:#CBD5E1;
-  --blue:#2563EB;
-  --blue-dark:#1D4ED8;
-  --blue-light:#EFF6FF;
-  --green:#059669;
-  --green-light:#ECFDF5;
-  --amber:#D97706;
-  --amber-light:#FFFBEB;
-  --red:#DC2626;
-  --red-light:#FEF2F2;
-  --purple:#7C3AED;
-  --slate:#64748B;
-  --slate2:#94A3B8;
-  --text:#0F172A;
-  --text2:#1E293B;
-  --text3:#475569;
-  --text4:#94A3B8;
+  --bg:#F1F5F9;--surface:#fff;--border:#E2E8F0;--border2:#CBD5E1;
+  --blue:#2563EB;--blue-dark:#1D4ED8;--blue-light:#EFF6FF;
+  --green:#059669;--green-light:#ECFDF5;
+  --amber:#D97706;--amber-light:#FFFBEB;
+  --red:#DC2626;--red-light:#FEF2F2;
+  --purple:#7C3AED;--slate:#64748B;
+  --text:#0F172A;--text2:#1E293B;--text3:#475569;--text4:#94A3B8;
   --nav-h:60px;
   --sh:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.05);
   --sh-sm:0 1px 2px rgba(0,0,0,.05);
-  --r:12px;
-  --r-sm:8px;
-  --font:'Inter','Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  --font-mono:'SF Mono','Fira Code','JetBrains Mono','Menlo',monospace;
+  --r:12px;--r-sm:8px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'SF Mono','Fira Code','JetBrains Mono',monospace;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.5;min-height:100vh}
@@ -46,137 +32,123 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14
 .ld-mark{width:56px;height:56px;border-radius:14px;background:var(--blue);display:flex;align-items:center;justify-content:center}
 .ld-mark svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round}
 .ld-name{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.02em}
-.ld-num{font-size:52px;font-weight:800;color:var(--blue);font-family:var(--font-mono);line-height:1}
+.ld-num{font-size:52px;font-weight:800;color:var(--blue);font-family:var(--mono);line-height:1}
 .ld-bar{width:220px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
 .ld-fill{height:100%;width:0;background:var(--blue);border-radius:2px;transition:width .3s}
 .ld-msg{font-size:12px;color:var(--text4);height:16px}
 
 /* HEADER */
 header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--sh-sm)}
-.hdr-inner{max-width:1600px;margin:0 auto;padding:0 24px;height:var(--nav-h);display:flex;align-items:center;gap:32px}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.hdr{max-width:1600px;margin:0 auto;padding:0 24px;height:var(--nav-h);display:flex;align-items:center;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none}
 .logo-mark{width:32px;height:32px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center}
 .logo-mark svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round}
 .logo-name{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.01em}
-
-/* NAV TABS */
 nav{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
-.nav-tab{padding:8px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;white-space:nowrap;transition:all .12s;border:none;background:transparent;font-family:var(--font)}
-.nav-tab:hover{background:var(--bg);color:var(--text)}
-.nav-tab.active{background:var(--blue-light);color:var(--blue);font-weight:700}
-
-/* HEADER RIGHT */
-.hdr-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
-.hdr-filters{display:flex;align-items:center;gap:8px}
-.filter-label{font-size:12px;color:var(--text3);font-weight:500}
+.tab{padding:7px 13px;border-radius:var(--r-sm);font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;white-space:nowrap;transition:all .12s;border:none;background:transparent;font-family:var(--font)}
+.tab:hover{background:var(--bg);color:var(--text)}
+.tab.on{background:var(--blue-light);color:var(--blue);font-weight:700}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.fl{font-size:12px;color:var(--text3);font-weight:500}
 select{background:#fff;border:1px solid var(--border2);color:var(--text);padding:6px 10px;border-radius:var(--r-sm);font-size:13px;font-family:var(--font);cursor:pointer;outline:none;font-weight:500}
 select:focus{border-color:var(--blue)}
-.update-time{font-size:11px;color:var(--text4);font-family:var(--font-mono)}
-.btn-refresh{background:var(--blue);border:none;color:#fff;border-radius:var(--r-sm);padding:7px 16px;font-size:13px;cursor:pointer;font-family:var(--font);font-weight:600;transition:background .12s}
-.btn-refresh:hover{background:var(--blue-dark)}
+.upd{font-size:11px;color:var(--text4);font-family:var(--mono)}
+.btn-r{background:var(--blue);border:none;color:#fff;border-radius:var(--r-sm);padding:7px 16px;font-size:13px;cursor:pointer;font-family:var(--font);font-weight:600}
+.btn-r:hover{background:var(--blue-dark)}
+.ver-wrap{position:relative}
+.ver-btn{background:none;border:1px solid var(--border2);border-radius:6px;padding:5px 11px;font-size:12px;color:var(--text3);cursor:pointer;font-family:var(--font)}
+.ver-panel{display:none;position:absolute;right:0;top:calc(100%+8px);background:#fff;border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);padding:16px;min-width:280px;z-index:200}
+.ver-panel.open{display:block}
+.vr{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.vr:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.vt{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.vbg{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;font-family:var(--mono)}
+.vbg.M{background:var(--blue-light);color:var(--blue)}.vbg.m{background:var(--green-light);color:var(--green)}
+.vd{font-size:11px;color:var(--text4);font-family:var(--mono)}
+.vdesc{font-size:12px;color:var(--text3)}
 
 /* MAIN */
 .main{max-width:1600px;margin:0 auto;padding:24px}
-.page{display:none}.page.active{display:block}
+.page{display:none}.page.on{display:block}
 .err{display:none;margin-bottom:16px;background:var(--red-light);border:1px solid var(--red);border-radius:var(--r);padding:12px 16px;color:var(--red);font-size:13px}
 
-/* KPI GRID */
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
-
-/* KPI CARD - filled style */
-.kpi{border-radius:var(--r);padding:22px 20px;position:relative;overflow:hidden}
-.kpi.blue{background:var(--blue);color:#fff}
-.kpi.green{background:var(--green);color:#fff}
-.kpi.amber{background:var(--amber);color:#fff}
-.kpi.purple{background:var(--purple);color:#fff}
-.kpi.slate{background:#334155;color:#fff}
-.kpi.white{background:#fff;border:1px solid var(--border);color:var(--text);box-shadow:var(--sh-sm)}
-.kpi-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.8;margin-bottom:8px}
-.kpi-val{font-size:28px;font-weight:800;font-family:var(--font-mono);line-height:1.1;letter-spacing:-.02em}
-.kpi.white .kpi-val{color:var(--text)}
-.kpi-sub{font-size:12px;margin-top:6px;opacity:.75;font-family:var(--font-mono)}
-.kpi-delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;margin-top:6px;padding:3px 8px;border-radius:20px;font-family:var(--font-mono)}
-.kpi.blue .kpi-delta,.kpi.green .kpi-delta,.kpi.amber .kpi-delta,.kpi.purple .kpi-delta,.kpi.slate .kpi-delta{background:rgba(255,255,255,.2);color:#fff}
-.kpi.white .kpi-delta.up{background:var(--green-light);color:var(--green)}
-.kpi.white .kpi-delta.down{background:var(--red-light);color:var(--red)}
-.kpi-deco{position:absolute;right:-12px;bottom:-12px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.1)}
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+.kpi{border-radius:var(--r);padding:20px 18px 16px;position:relative;overflow:hidden}
+.kpi.bl{background:var(--blue);color:#fff}.kpi.gr{background:var(--green);color:#fff}
+.kpi.am{background:var(--amber);color:#fff}.kpi.pu{background:var(--purple);color:#fff}
+.kpi.sl{background:#334155;color:#fff}
+.kpi.wh{background:#fff;border:1px solid var(--border);color:var(--text);box-shadow:var(--sh-sm)}
+.kpi-deco{position:absolute;right:-14px;bottom:-14px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.1)}
+.kl{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;opacity:.8;margin-bottom:6px}
+.kv{font-size:28px;font-weight:800;font-family:var(--mono);line-height:1.1;letter-spacing:-.02em}
+.kpi.wh .kv{color:var(--text)}
+.ks{font-size:12px;margin-top:5px;opacity:.75;font-family:var(--mono)}
+.kd{display:inline-flex;align-items:center;gap:2px;font-size:11px;font-weight:700;margin-top:5px;padding:2px 7px;border-radius:20px;font-family:var(--mono)}
+.kpi.bl .kd,.kpi.gr .kd,.kpi.am .kd,.kpi.pu .kd,.kpi.sl .kd{background:rgba(255,255,255,.2);color:#fff}
+.kpi.wh .kd.up{background:var(--green-light);color:var(--green)}
+.kpi.wh .kd.dn{background:var(--red-light);color:var(--red)}
 
 /* CARD */
 .card{background:#fff;border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-sm);margin-bottom:16px}
-.card-hdr{padding:18px 20px 0;display:flex;align-items:center;justify-content:space-between}
-.card-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.01em}
-.card-body{padding:16px 20px 20px}
-.card-legend{display:flex;gap:14px;flex-wrap:wrap}
-.leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);font-weight:500}
-.leg-dot{width:8px;height:8px;border-radius:2px}
+.card.mb0{margin-bottom:0}
+.ch{padding:18px 20px 0;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.ct{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.cb{padding:16px 20px 20px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px}
+.li{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);font-weight:500}
+.ld{width:8px;height:8px;border-radius:2px}
 
 /* CHART */
-.chart-wrap{position:relative}
-.h240{height:240px}.h280{height:280px}.h300{height:300px}.h320{height:320px}.h360{height:360px}.h400{height:400px}
+.cw{position:relative}
+.h200{height:200px}.h240{height:240px}.h260{height:260px}.h280{height:280px}
+.h300{height:300px}.h320{height:320px}.h360{height:360px}.h400{height:400px}.h440{height:440px}
 
 /* TABLE */
-.tbl-wrap{overflow-x:auto}
+.tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse}
 th{background:#F8FAFC;color:var(--text3);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--border)}
 td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#F8FAFC}
-.num{font-family:var(--font-mono);text-align:right;font-weight:600;color:var(--text)}
+.n{font-family:var(--mono);text-align:right;font-weight:600;color:var(--text)}
 
-/* BADGES */
-.tag{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.02em}
-.tag-blue{background:var(--blue-light);color:var(--blue)}
-.tag-green{background:var(--green-light);color:var(--green)}
-.tag-amber{background:var(--amber-light);color:var(--amber)}
-.abc-a{background:var(--green-light);color:var(--green);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--font-mono)}
-.abc-b{background:var(--amber-light);color:var(--amber);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--font-mono)}
-.abc-c{background:var(--bg);color:var(--text3);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--font-mono)}
+/* TAGS */
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.tb{background:var(--blue-light);color:var(--blue)}
+.tg{background:var(--green-light);color:var(--green)}
+.ta{background:var(--amber-light);color:var(--amber)}
+.abc-a{background:var(--green-light);color:var(--green);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--mono)}
+.abc-b{background:var(--amber-light);color:var(--amber);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--mono)}
+.abc-c{background:var(--bg);color:var(--text3);padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--mono)}
 
 /* BAR ROW */
-.bar-row{display:flex;align-items:center;gap:8px}
-.bar-track{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;min-width:50px}
-.bar-fill{height:100%;border-radius:2px}
-.bf-blue{background:var(--blue)}.bf-green{background:var(--green)}.bf-amber{background:var(--amber)}
-.bar-pct{font-size:12px;color:var(--text3);font-family:var(--font-mono);font-weight:600;min-width:40px;text-align:right}
+.br{display:flex;align-items:center;gap:8px}
+.bt{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;min-width:50px}
+.bf{height:100%;border-radius:2px}
+.bbl{background:var(--blue)}.bgr{background:var(--green)}.bam{background:var(--amber)}
+.bp{font-size:12px;color:var(--text3);font-family:var(--mono);font-weight:600;min-width:40px;text-align:right}
 
 /* YOY */
-.yoy-up{color:var(--green);font-family:var(--font-mono);font-size:12px;font-weight:700}
-.yoy-dn{color:var(--red);font-family:var(--font-mono);font-size:12px;font-weight:700}
-.yoy-eq{color:var(--text4);font-family:var(--font-mono);font-size:12px}
+.yu{color:var(--green);font-family:var(--mono);font-size:12px;font-weight:700}
+.yn{color:var(--red);font-family:var(--mono);font-size:12px;font-weight:700}
+.ye{color:var(--text4);font-family:var(--mono);font-size:12px}
 
 /* RANK */
-.rk{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text3)}
+.rk{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text3)}
 .rk.r1{color:#B45309}.rk.r2{color:#475569}.rk.r3{color:#9F1239}
 
 /* LAYOUT */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g31{display:grid;grid-template-columns:1.8fr 1fr;gap:16px}
 .g13{display:grid;grid-template-columns:1fr 1.6fr;gap:16px}
-.sec{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-
-/* VERSION DRAWER */
-.ver-btn{background:none;border:1px solid var(--border2);border-radius:6px;padding:5px 12px;font-size:12px;color:var(--text3);cursor:pointer;font-family:var(--font);font-weight:500}
-.ver-panel{display:none;position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);padding:16px;min-width:280px;z-index:200}
-.ver-panel.open{display:block}
-.ver-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
-.ver-row:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
-.ver-top{display:flex;align-items:center;gap:8px;margin-bottom:3px}
-.vbadge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;font-family:var(--font-mono)}
-.vbadge.major{background:var(--blue-light);color:var(--blue)}
-.vbadge.minor{background:var(--green-light);color:var(--green)}
-.vdate{font-size:11px;color:var(--text4);font-family:var(--font-mono)}
-.vdesc{font-size:12px;color:var(--text3)}
 
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-@media(max-width:1100px){.g3{grid-template-columns:1fr 1fr}}
-@media(max-width:768px){
-  .hdr-inner{padding:0 16px;gap:16px}.main{padding:16px}
-  .g2,.g3,.g13{grid-template-columns:1fr}
-  .kpi-val{font-size:24px}.hdr-filters{display:none}
-}
+@media(max-width:1100px){.g2,.g3,.g31,.g13{grid-template-columns:1fr}}
+@media(max-width:768px){.hdr{padding:0 16px;gap:12px}.main{padding:16px}.kv{font-size:22px}}
 </style>
 </head>
 <body>
@@ -190,46 +162,43 @@ tr:hover td{background:#F8FAFC}
 </div>
 
 <header>
-  <div class="hdr-inner">
+  <div class="hdr">
     <a class="logo" href="#">
       <div class="logo-mark"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
       <span class="logo-name">SOUNDGLUCK</span>
     </a>
-    <nav id="mainNav">
-      <button class="nav-tab active" onclick="goPage('home',this)">Overview</button>
-      <button class="nav-tab" onclick="goPage('monthly',this)">Monthly</button>
-      <button class="nav-tab" onclick="goPage('brand',this)">Brand</button>
-      <button class="nav-tab" onclick="goPage('items',this)">Category</button>
-      <button class="nav-tab" onclick="goPage('channel',this)">Channel</button>
-      <button class="nav-tab" onclick="goPage('trend',this)">Trend</button>
-      <button class="nav-tab" onclick="goPage('purchase',this)">Purchase</button>
-      <button class="nav-tab" onclick="goPage('yoy',this)">YoY</button>
-      <button class="nav-tab" onclick="goPage('top10',this)">Top 10</button>
+    <nav>
+      <button class="tab on" onclick="goPage('home',this)">Overview</button>
+      <button class="tab" onclick="goPage('brand',this)">Brand</button>
+      <button class="tab" onclick="goPage('items',this)">Category</button>
+      <button class="tab" onclick="goPage('channel',this)">Channel</button>
+      <button class="tab" onclick="goPage('trend',this)">Trend</button>
+      <button class="tab" onclick="goPage('purchase',this)">Purchase</button>
+      <button class="tab" onclick="goPage('yoy',this)">YoY</button>
+      <button class="tab" onclick="goPage('top10',this)">Top 10</button>
     </nav>
     <div class="hdr-right">
-      <div class="hdr-filters">
-        <span class="filter-label">Year</span>
-        <select id="selYear" onchange="onFC()"></select>
-        <span class="filter-label">Month</span>
-        <select id="selMonth" onchange="onFC()">
-          <option value="0" selected>All</option>
-          <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
-          <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
-          <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
-          <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
-        </select>
-      </div>
-      <span class="update-time" id="updateTime">—</span>
-      <div style="position:relative">
-        <button class="ver-btn" onclick="document.getElementById('verPanel').classList.toggle('open')">v3.1</button>
-        <div class="ver-panel" id="verPanel">
-          <div class="ver-row"><div class="ver-top"><span class="vbadge major">v3.1</span><span class="vdate">2026-06-16</span></div><div class="vdesc">White theme · Inter font · Top nav · Filled KPI cards · Trend analysis · No grid lines</div></div>
-          <div class="ver-row"><div class="ver-top"><span class="vbadge minor">v2.2</span><span class="vdate">2026-06-16</span></div><div class="vdesc">Channel normalization · YoY same-period · MoM comparison</div></div>
-          <div class="ver-row"><div class="ver-top"><span class="vbadge minor">v2.0</span><span class="vdate">2026-06-15</span></div><div class="vdesc">Sidebar layout · Brand/Category ABC · Purchase · YoY</div></div>
-          <div class="ver-row"><div class="ver-top"><span class="vbadge minor">v1.0</span><span class="vdate">2026-06-15</span></div><div class="vdesc">Initial release</div></div>
+      <span class="fl">Year</span>
+      <select id="selYear" onchange="onFC()"></select>
+      <span class="fl">Month</span>
+      <select id="selMonth" onchange="onFC()">
+        <option value="0" selected>All</option>
+        <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+        <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+        <option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option>
+        <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+      </select>
+      <span class="upd" id="upd">—</span>
+      <div class="ver-wrap">
+        <button class="ver-btn" onclick="document.getElementById('vp').classList.toggle('open')">v3.2</button>
+        <div class="ver-panel" id="vp">
+          <div class="vr"><div class="vt"><span class="vbg M">v3.2</span><span class="vd">2026-06-16</span></div><div class="vdesc">Outbound date daily chart · Layout overhaul · Top nav · YoY chart in Top10</div></div>
+          <div class="vr"><div class="vt"><span class="vbg m">v3.1</span><span class="vd">2026-06-16</span></div><div class="vdesc">White theme · Inter font · Filled KPI · No grid lines</div></div>
+          <div class="vr"><div class="vt"><span class="vbg m">v2.2</span><span class="vd">2026-06-16</span></div><div class="vdesc">Channel normalization · YoY same-period</div></div>
+          <div class="vr"><div class="vt"><span class="vbg m">v1.0</span><span class="vd">2026-06-15</span></div><div class="vdesc">Initial release</div></div>
         </div>
       </div>
-      <button class="btn-refresh" onclick="loadAll()">Refresh</button>
+      <button class="btn-r" onclick="loadAll()">Refresh</button>
     </div>
   </div>
 </header>
@@ -238,88 +207,77 @@ tr:hover td{background:#F8FAFC}
   <div class="err" id="errBanner"></div>
 
   <!-- OVERVIEW -->
-  <div id="page-home" class="page active">
+  <div id="page-home" class="page on">
     <div class="kpi-grid" id="kpiMtd"></div>
     <div class="kpi-grid" id="kpiYtd"></div>
     <div class="g13" style="margin-bottom:16px">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr">
-          <span class="card-title">Daily Sales (일별 매출)</span>
-          <div class="card-legend">
-            <span class="leg"><span class="leg-dot" style="background:var(--blue)"></span>Daily</span>
-            <span class="leg"><span class="leg-dot" style="background:var(--green)"></span>Cumul.</span>
-          </div>
-        </div>
-        <div class="card-body h280"><canvas id="dailyChart"></canvas></div>
+      <div class="card mb0">
+        <div class="ch"><span class="ct">Channel Sales (채널별 매출)</span></div>
+        <div class="cb h280"><canvas id="homeChChart"></canvas></div>
       </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title">Channel Sales (채널별 매출)</span></div>
-        <div class="card-body h280"><canvas id="homeChChart"></canvas></div>
+      <div class="card mb0">
+        <div class="ch">
+          <span class="ct">Daily Sales — Outbound (출고일 기준)</span>
+          <div class="leg"><span class="li"><span class="ld" style="background:var(--blue)"></span>Daily</span><span class="li"><span class="ld" style="background:var(--green)"></span>Cumul.</span></div>
+        </div>
+        <div class="cb h280"><canvas id="dailyChart"></canvas></div>
       </div>
     </div>
-  </div>
-
-  <!-- MONTHLY -->
-  <div id="page-monthly" class="page">
-    <div class="kpi-grid" id="kpiMonthly"></div>
     <div class="card">
-      <div class="card-hdr">
-        <span class="card-title">Monthly Sales & Margin (월별 매출 / 마진)</span>
-        <div class="card-legend">
-          <span class="leg"><span class="leg-dot" style="background:var(--blue)"></span>Sales</span>
-          <span class="leg"><span class="leg-dot" style="background:var(--green)"></span>Margin</span>
-          <span class="leg"><span class="leg-dot" style="background:var(--amber)"></span>Margin %</span>
+      <div class="ch">
+        <span class="ct">Monthly Sales & Margin (월별 매출 / 마진)</span>
+        <div class="leg">
+          <span class="li"><span class="ld" style="background:var(--blue)"></span>Sales</span>
+          <span class="li"><span class="ld" style="background:var(--green)"></span>Margin</span>
+          <span class="li"><span class="ld" style="background:var(--amber)"></span>Margin %</span>
         </div>
       </div>
-      <div class="card-body h320"><canvas id="monthlyChart"></canvas></div>
+      <div class="cb h300"><canvas id="monthlyChart"></canvas></div>
     </div>
   </div>
 
   <!-- BRAND -->
   <div id="page-brand" class="page">
     <div class="kpi-grid" id="kpiBrand"></div>
-    <div class="g2">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title">Sales by Brand (브랜드별 매출)</span></div>
-        <div class="card-body h360"><canvas id="brandSalesChart"></canvas></div>
-      </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title">Margin % by Brand (브랜드별 마진율)</span></div>
-        <div class="card-body h360"><canvas id="brandMgnChart"></canvas></div>
-      </div>
-    </div>
-    <div style="height:16px"></div>
     <div class="card">
-      <div class="card-hdr"><span class="card-title">Brand Detail + ABC Analysis</span></div>
-      <div class="card-body" style="padding-top:12px">
-        <div class="tbl-wrap"><table><thead><tr>
-          <th>ABC</th><th>Brand</th><th class="num">Sales</th><th class="num">Margin</th>
-          <th class="num">Mgn %</th><th class="num">Orders</th><th>Share</th><th class="num">Cumul. (누적)</th>
+      <div class="ch"><span class="ct">Sales by Brand (브랜드별 매출)</span></div>
+      <div class="cb h360"><canvas id="brandSalesChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">Margin % by Brand (브랜드별 마진율)</span></div>
+      <div class="cb h320"><canvas id="brandMgnChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct">Brand Detail + ABC Analysis</span></div>
+      <div class="cb" style="padding-top:12px">
+        <div class="tw"><table><thead><tr>
+          <th>ABC</th><th>Brand</th><th class="n">Sales</th><th class="n">Margin</th>
+          <th class="n">Mgn %</th><th class="n">Orders</th><th>Share</th><th class="n">Cumul. (누적)</th>
         </tr></thead><tbody id="brandTbody"></tbody></table></div>
       </div>
     </div>
   </div>
 
-  <!-- ITEMS / CATEGORY -->
+  <!-- CATEGORY -->
   <div id="page-items" class="page">
     <div class="kpi-grid" id="kpiItems"></div>
     <div class="g2">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title">Sales by Category (품목별 매출)</span></div>
-        <div class="card-body h360"><canvas id="itemsSalesChart"></canvas></div>
+      <div class="card mb0">
+        <div class="ch"><span class="ct">Sales by Category (품목별 매출)</span></div>
+        <div class="cb h360"><canvas id="itemsSalesChart"></canvas></div>
       </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title">Margin % by Category (품목별 마진율)</span></div>
-        <div class="card-body h360"><canvas id="itemsMgnChart"></canvas></div>
+      <div class="card mb0">
+        <div class="ch"><span class="ct">Margin % by Category</span></div>
+        <div class="cb h360"><canvas id="itemsMgnChart"></canvas></div>
       </div>
     </div>
     <div style="height:16px"></div>
     <div class="card">
-      <div class="card-hdr"><span class="card-title">Category Detail + ABC Analysis</span></div>
-      <div class="card-body" style="padding-top:12px">
-        <div class="tbl-wrap"><table><thead><tr>
-          <th>ABC</th><th>Category</th><th class="num">Sales</th><th class="num">Margin</th>
-          <th class="num">Mgn %</th><th class="num">Orders</th><th>Share</th><th class="num">Cumul. (누적)</th>
+      <div class="ch"><span class="ct">Category Detail + ABC Analysis</span></div>
+      <div class="cb" style="padding-top:12px">
+        <div class="tw"><table><thead><tr>
+          <th>ABC</th><th>Category</th><th class="n">Sales</th><th class="n">Margin</th>
+          <th class="n">Mgn %</th><th class="n">Orders</th><th>Share</th><th class="n">Cumul. (누적)</th>
         </tr></thead><tbody id="itemsTbody"></tbody></table></div>
       </div>
     </div>
@@ -329,22 +287,22 @@ tr:hover td{background:#F8FAFC}
   <div id="page-channel" class="page">
     <div class="kpi-grid" id="kpiChannel"></div>
     <div class="g2">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title">Sales by Channel (채널별 매출)</span></div>
-        <div class="card-body h300"><canvas id="chSalesChart"></canvas></div>
+      <div class="card mb0">
+        <div class="ch"><span class="ct">Sales by Channel (채널별 매출)</span></div>
+        <div class="cb h300"><canvas id="chSalesChart"></canvas></div>
       </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title">Margin % by Channel (채널별 마진율)</span></div>
-        <div class="card-body h300"><canvas id="chMgnChart"></canvas></div>
+      <div class="card mb0">
+        <div class="ch"><span class="ct">Margin % by Channel</span></div>
+        <div class="cb h300"><canvas id="chMgnChart"></canvas></div>
       </div>
     </div>
     <div style="height:16px"></div>
     <div class="card">
-      <div class="card-hdr"><span class="card-title">Channel Detail</span></div>
-      <div class="card-body" style="padding-top:12px">
-        <div class="tbl-wrap"><table><thead><tr>
-          <th>Channel</th><th class="num">Sales</th><th class="num">Margin</th>
-          <th class="num">Mgn %</th><th class="num">Orders</th><th>Share</th>
+      <div class="ch"><span class="ct">Channel Detail</span></div>
+      <div class="cb" style="padding-top:12px">
+        <div class="tw"><table><thead><tr>
+          <th>Channel</th><th class="n">Sales</th><th class="n">Margin</th>
+          <th class="n">Mgn %</th><th class="n">Orders</th><th>Share</th>
         </tr></thead><tbody id="chTbody"></tbody></table></div>
       </div>
     </div>
@@ -353,35 +311,26 @@ tr:hover td{background:#F8FAFC}
   <!-- TREND -->
   <div id="page-trend" class="page">
     <div class="g2">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr">
-          <span class="card-title">Channel Trend (채널별 추이)</span>
-          <div class="card-legend" id="tChLeg"></div>
-        </div>
-        <div class="card-body h300"><canvas id="tChChart"></canvas></div>
+      <div class="card mb0">
+        <div class="ch"><span class="ct">Channel Trend (채널별 추이)</span><div class="leg" id="tChLeg"></div></div>
+        <div class="cb h300"><canvas id="tChChart"></canvas></div>
       </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr">
-          <span class="card-title">Category Trend (품목별 추이)</span>
-          <div class="card-legend" id="tItLeg"></div>
-        </div>
-        <div class="card-body h300"><canvas id="tItChart"></canvas></div>
+      <div class="card mb0">
+        <div class="ch"><span class="ct">Category Trend (품목별 추이)</span><div class="leg" id="tItLeg"></div></div>
+        <div class="cb h300"><canvas id="tItChart"></canvas></div>
       </div>
     </div>
     <div style="height:16px"></div>
     <div class="card">
-      <div class="card-hdr">
-        <span class="card-title">Brand Trend (브랜드별 추이)</span>
-        <div class="card-legend" id="tBrLeg"></div>
-      </div>
-      <div class="card-body h300"><canvas id="tBrChart"></canvas></div>
+      <div class="ch"><span class="ct">Brand Trend (브랜드별 추이)</span><div class="leg" id="tBrLeg"></div></div>
+      <div class="cb h280"><canvas id="tBrChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-hdr"><span class="card-title">Cumulative (누적) Top 15 Models</span></div>
-      <div class="card-body" style="padding-top:12px">
-        <div class="tbl-wrap"><table><thead><tr>
+      <div class="ch"><span class="ct">Cumulative (누적) Top 15 Models</span></div>
+      <div class="cb" style="padding-top:12px">
+        <div class="tw"><table><thead><tr>
           <th>#</th><th>Model</th><th>Category</th><th>Brand</th>
-          <th class="num">Sales</th><th class="num">Mgn %</th><th class="num">Orders</th><th>Share</th>
+          <th class="n">Sales</th><th class="n">Mgn %</th><th class="n">Orders</th><th>Share</th>
         </tr></thead><tbody id="top15Tbody"></tbody></table></div>
       </div>
     </div>
@@ -391,20 +340,17 @@ tr:hover td{background:#F8FAFC}
   <div id="page-purchase" class="page">
     <div class="kpi-grid" id="kpiPurchase"></div>
     <div class="card">
-      <div class="card-hdr">
-        <span class="card-title">Monthly Purchase Trend (월별 매입 추이)</span>
-        <div class="card-legend">
-          <span class="leg"><span class="leg-dot" style="background:var(--amber)"></span>External</span>
-          <span class="leg"><span class="leg-dot" style="background:var(--purple)"></span>Asset</span>
-        </div>
+      <div class="ch">
+        <span class="ct">Monthly Purchase Trend (월별 매입 추이)</span>
+        <div class="leg"><span class="li"><span class="ld" style="background:var(--amber)"></span>External</span><span class="li"><span class="ld" style="background:var(--purple)"></span>Asset</span></div>
       </div>
-      <div class="card-body h280"><canvas id="purchChart"></canvas></div>
+      <div class="cb h280"><canvas id="purchChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-hdr"><span class="card-title">Supplier Detail (매입처별)</span></div>
-      <div class="card-body" style="padding-top:12px">
-        <div class="tbl-wrap"><table><thead><tr>
-          <th>Supplier (매입처)</th><th class="num">Total</th><th class="num">Count</th><th>Share</th><th class="num">Avg. (평균)</th>
+      <div class="ch"><span class="ct">Supplier Detail (매입처별)</span></div>
+      <div class="cb" style="padding-top:12px">
+        <div class="tw"><table><thead><tr>
+          <th>Supplier (매입처)</th><th class="n">Total</th><th class="n">Count</th><th>Share</th><th class="n">Avg. (평균)</th>
         </tr></thead><tbody id="purchTbody"></tbody></table></div>
       </div>
     </div>
@@ -414,42 +360,48 @@ tr:hover td{background:#F8FAFC}
   <div id="page-yoy" class="page">
     <div class="kpi-grid" id="kpiYoy"></div>
     <div class="card">
-      <div class="card-hdr">
-        <span class="card-title" id="yoyChTitle">YoY Sales Comparison</span>
-        <div class="card-legend" id="yoyLeg"></div>
-      </div>
-      <div class="card-body h320"><canvas id="yoyChart"></canvas></div>
+      <div class="ch"><span class="ct" id="yoyChTitle">YoY Sales Comparison</span><div class="leg" id="yoyLeg"></div></div>
+      <div class="cb h320"><canvas id="yoyChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-hdr"><span class="card-title">Margin % Comparison</span></div>
-      <div class="card-body h260"><canvas id="yoyMgnChart"></canvas></div>
+      <div class="ch"><span class="ct">Margin % Comparison</span></div>
+      <div class="cb h260"><canvas id="yoyMgnChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-hdr"><span class="card-title">Monthly YoY Detail</span></div>
-      <div class="card-body" style="padding-top:12px">
-        <div class="tbl-wrap"><table><thead><tr>
-          <th>Month</th><th class="num" id="yoyTh1">Prev Year</th><th class="num" id="yoyTh2">Curr Year</th>
-          <th class="num">Change</th><th class="num">Growth</th><th class="num">Prev Mgn%</th><th class="num">Curr Mgn%</th>
+      <div class="ch"><span class="ct">Monthly YoY Detail</span></div>
+      <div class="cb" style="padding-top:12px">
+        <div class="tw"><table><thead><tr>
+          <th>Month</th><th class="n" id="yoyTh1">Prev Year</th><th class="n" id="yoyTh2">Curr Year</th>
+          <th class="n">Change</th><th class="n">Growth</th><th class="n">Prev Mgn%</th><th class="n">Curr Mgn%</th>
         </tr></thead><tbody id="yoyTbody"></tbody></table></div>
       </div>
     </div>
   </div>
 
-  <!-- TOP10 -->
+  <!-- TOP 10 -->
   <div id="page-top10" class="page">
-    <div class="sec" id="top10Sec">Top 10 Rankings</div>
+    <div class="g2" style="margin-bottom:16px">
+      <div class="card mb0">
+        <div class="ch"><span class="ct" id="top10SalesCompTitle">Sales Top 10 — YoY Comparison</span><div class="leg"><span class="li"><span class="ld" style="background:#94A3B8"></span>Prev</span><span class="li"><span class="ld" style="background:var(--blue)"></span>Curr</span></div></div>
+        <div class="cb h300"><canvas id="top10SalesCompChart"></canvas></div>
+      </div>
+      <div class="card mb0">
+        <div class="ch"><span class="ct" id="top10MgnCompTitle">Margin Top 10 — YoY Comparison</span><div class="leg"><span class="li"><span class="ld" style="background:#94A3B8"></span>Prev</span><span class="li"><span class="ld" style="background:var(--green)"></span>Curr</span></div></div>
+        <div class="cb h300"><canvas id="top10MgnCompChart"></canvas></div>
+      </div>
+    </div>
     <div class="g2">
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title" id="top10SalesTitle">Sales Top 10</span></div>
-        <div class="card-body" style="padding-top:12px">
-          <table><thead><tr><th>#</th><th>Model</th><th class="num">Sales</th><th class="num">Mgn%</th><th class="num">Qty</th></tr></thead>
+      <div class="card mb0">
+        <div class="ch"><span class="ct" id="top10SalesTitle">Sales Top 10</span></div>
+        <div class="cb" style="padding-top:12px">
+          <table><thead><tr><th>#</th><th>Model</th><th class="n">Sales</th><th class="n">Mgn%</th><th class="n">Qty</th></tr></thead>
           <tbody id="top10SalesTbody"></tbody></table>
         </div>
       </div>
-      <div class="card" style="margin-bottom:0">
-        <div class="card-hdr"><span class="card-title" id="top10MgnTitle">Margin Top 10</span></div>
-        <div class="card-body" style="padding-top:12px">
-          <table><thead><tr><th>#</th><th>Model</th><th class="num">Margin</th><th class="num">Mgn%</th><th class="num">Qty</th></tr></thead>
+      <div class="card mb0">
+        <div class="ch"><span class="ct" id="top10MgnTitle">Margin Top 10</span></div>
+        <div class="cb" style="padding-top:12px">
+          <table><thead><tr><th>#</th><th>Model</th><th class="n">Margin</th><th class="n">Mgn%</th><th class="n">Qty</th></tr></thead>
           <tbody id="top10MgnTbody"></tbody></table>
         </div>
       </div>
@@ -462,64 +414,44 @@ Chart.register(ChartDataLabels);
 
 const API_URL='https://script.google.com/macros/s/AKfycbyHgFbQiOW5JuGCQKXvCYXk0iF9JvVICy70Q8VX08pvjb8QzTm7Lrpudu6EezxbirJSzg/exec';
 const C=['#2563EB','#059669','#D97706','#DC2626','#7C3AED','#0891B2','#DB2777','#065F46','#92400E','#1E40AF','#047857','#B45309','#991B1B','#5B21B6','#0E7490'];
-const MONTHS_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MEN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 let RAW=[],RAW_ALL=[],charts={},curPage='home';
 
-/* CHANNEL NORMALIZE */
 const CH_EX=['서비스','반입','매입'];
-function normCh(ch){
-  if(!ch)return null;
-  const c=ch.trim();
-  if(CH_EX.some(e=>c.includes(e)))return null;
-  if(c.toUpperCase().includes('S2B'))return'S2B';
-  return c;
-}
+function nCh(ch){if(!ch)return null;const c=ch.trim();if(CH_EX.some(e=>c.includes(e)))return null;if(c.toUpperCase().includes('S2B'))return'S2B';return c;}
 
 /* LOADING */
 function startLoad(){
-  let n=3; const el=document.getElementById('ldN'),bar=document.getElementById('ldB'),msg=document.getElementById('ldM');
-  const msgs=['Connecting...','Loading sales data...','Building charts...','Done!'];
-  let mi=0;
-  const iv=setInterval(()=>{
-    if(n<=0){clearInterval(iv);return;}
-    n--; el.textContent=n||'✓'; bar.style.width=((3-n)/3*100)+'%';
-    if(mi<msgs.length)msg.textContent=msgs[mi++];
-  },800);
+  let n=3;const el=document.getElementById('ldN'),b=document.getElementById('ldB'),m=document.getElementById('ldM');
+  const ms=['Connecting...','Loading data...','Rendering...','Done!'];let mi=0;
+  const iv=setInterval(()=>{if(n<=0){clearInterval(iv);return;}n--;el.textContent=n||'✓';b.style.width=((3-n)/3*100)+'%';if(mi<ms.length)m.textContent=ms[mi++];},800);
 }
-function hideLoad(){
-  setTimeout(()=>{const e=document.getElementById('loading');e.style.opacity='0';e.style.transition='opacity .4s';setTimeout(()=>e.style.display='none',400);},500);
-}
+function hideLoad(){setTimeout(()=>{const e=document.getElementById('loading');e.style.opacity='0';e.style.transition='opacity .4s';setTimeout(()=>e.style.display='none',400);},500);}
 
 /* NAV */
-const PAGE_RENDERS={home:renderHome,monthly:renderMonthly,brand:renderBrand,items:renderItems,channel:renderChannel,trend:renderTrend,purchase:renderPurchase,yoy:renderYoy,top10:renderTop10};
+const PR={home:renderHome,brand:renderBrand,items:renderItems,channel:renderChannel,trend:renderTrend,purchase:renderPurchase,yoy:renderYoy,top10:renderTop10};
 function goPage(id,el){
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  if(el)el.classList.add('active');
-  document.getElementById('page-'+id).classList.add('active');
-  curPage=id;
-  if(PAGE_RENDERS[id])PAGE_RENDERS[id]();
-  document.getElementById('verPanel').classList.remove('open');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  if(el)el.classList.add('on');
+  document.getElementById('page-'+id).classList.add('on');
+  curPage=id;if(PR[id])PR[id]();
+  document.getElementById('vp').classList.remove('open');
 }
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.ver-btn')&&!e.target.closest('.ver-panel'))
-    document.getElementById('verPanel').classList.remove('open');
-});
+document.addEventListener('click',e=>{if(!e.target.closest('.ver-wrap'))document.getElementById('vp').classList.remove('open');});
 
 /* FILTER */
-function buildYearSel(){
-  const years=[...new Set(RAW.map(r=>r.year))].filter(Boolean).sort();
-  const sel=document.getElementById('selYear');
-  sel.innerHTML='<option value="0">All</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
-  const ty=new Date().getFullYear();
-  if(years.includes(ty))sel.value=ty;
+function bYS(){
+  const ys=[...new Set(RAW.map(r=>r.year))].filter(Boolean).sort();
+  const s=document.getElementById('selYear');
+  s.innerHTML='<option value="0">All</option>'+ys.map(y=>`<option value="${y}">${y}</option>`).join('');
+  const ty=new Date().getFullYear();if(ys.includes(ty))s.value=ty;
 }
 function gf(){return{year:parseInt(document.getElementById('selYear').value)||0,month:parseInt(document.getElementById('selMonth').value)||0};}
 function fr(rows){const{year,month}=gf();return rows.filter(r=>{if(year&&Number(r.year)!==year)return false;if(month&&Number(r.month)!==month)return false;return true;});}
-function onFC(){if(PAGE_RENDERS[curPage])PAGE_RENDERS[curPage]();}
-function ty(){return new Date().getFullYear();}
-function tm(){return new Date().getMonth()+1;}
+function onFC(){if(PR[curPage])PR[curPage]();}
+const ty=()=>new Date().getFullYear(),tm=()=>new Date().getMonth()+1;
 
 /* FETCH */
 async function loadAll(){
@@ -528,11 +460,11 @@ async function loadAll(){
     showErr('');
     const res=await fetch(API_URL+'?t='+Date.now());
     if(!res.ok)throw new Error('HTTP '+res.status);
-    const json=await res.json();
-    if(json.status!=='ok')throw new Error(json.message||'Error');
-    RAW=json.main||[]; RAW_ALL=json.all||[];
-    buildYearSel();
-    document.getElementById('updateTime').textContent=new Date().toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const j=await res.json();
+    if(j.status!=='ok')throw new Error(j.message||'Error');
+    RAW=j.main||[];RAW_ALL=j.all||[];
+    bYS();
+    document.getElementById('upd').textContent=new Date().toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
     renderHome();
   }catch(e){showErr('Load failed: '+e.message);}
   finally{hideLoad();}
@@ -541,43 +473,30 @@ function showErr(m){const e=document.getElementById('errBanner');e.innerHTML=m;e
 
 /* FORMAT */
 const fmt=n=>Math.round(n).toLocaleString('ko-KR');
-const fmtS=n=>{const a=Math.abs(n),s=n<0?'-':'';if(a>=1e8)return s+(a/1e8).toFixed(2)+'억';if(a>=1e4)return s+fmt(Math.round(a/1e4))+'만';return fmt(n);};
-const fmtPct=n=>(n*100).toFixed(1)+'%';
-const fmtYm=ym=>{const y=Math.floor(ym/100),m=ym%100,fy=y<100?2000+y:y;return`${fy}.${String(m).padStart(2,'0')}`;};
-const monthEn=m=>MONTHS_EN[(m-1)%12]||m+'월';
+const fS=n=>{const a=Math.abs(n),s=n<0?'-':'';if(a>=1e8)return s+(a/1e8).toFixed(2)+'억';if(a>=1e4)return s+fmt(Math.round(a/1e4))+'만';return fmt(n);};
+const fP=n=>(n*100).toFixed(1)+'%';
+const fYm=ym=>{const y=Math.floor(ym/100),m=ym%100,fy=y<100?2000+y:y;return`${fy}.${String(m).padStart(2,'0')}`;};
+const mEn=m=>MEN[(m-1)%12]||m;
 
-function dblDelta(curr,p1,l1,p2,l2){
+function dd(curr,p1,l1,p2,l2){
   let h='';
-  [[p1,l1],[p2,l2]].forEach(([p,l])=>{
-    if(!p||p===0)return;
-    const d=((curr-p)/p*100).toFixed(1);
-    h+=`<span class="kpi-delta ${+d>=0?'up':'down'}">${+d>=0?'▲':'▼'} ${Math.abs(d)}% ${l}</span>`;
-  });
+  [[p1,l1],[p2,l2]].forEach(([p,l])=>{if(!p||!l)return;const d=((curr-p)/p*100).toFixed(1);h+=`<span class="kd ${+d>=0?'up':'dn'}">${+d>=0?'▲':'▼'} ${Math.abs(d)}% ${l}</span>`;});
   return h;
 }
-function yd(curr,prev){
-  if(!prev)return'<span class="yoy-eq">—</span>';
-  const d=((curr-prev)/prev*100).toFixed(1);
-  if(+d>0)return`<span class="yoy-up">+${d}%</span>`;
-  if(+d<0)return`<span class="yoy-dn">${d}%</span>`;
-  return'<span class="yoy-eq">0%</span>';
-}
+function yd(c,p){if(!p)return'<span class="ye">—</span>';const d=((c-p)/p*100).toFixed(1);return +d>0?`<span class="yu">+${d}%</span>`:(+d<0?`<span class="yn">${d}%</span>`:'<span class="ye">0%</span>');}
 
-/* CHART BASE */
+/* CHART HELPERS */
 function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
-const noGrid={grid:{display:false}};
-const baseX={grid:{display:false},ticks:{color:'#64748B',font:{size:12,family:"'Inter',sans-serif"}}};
-const baseY={grid:{color:'rgba(0,0,0,.04)'},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>fmtS(v)}};
-const baseYpct={...baseY,ticks:{...baseY.ticks,callback:v=>v+'%'}};
-const noGridY={grid:{display:false},border:{display:false},ticks:{color:'#334155',font:{size:13,weight:'600',family:"'Inter',sans-serif"}}};
-
-// datalabels: inside bar if bar is wide, outside if narrow
-function dlBar(color='#334155'){return{display:true,color,font:{size:12,weight:'700',family:"'Inter',sans-serif"},formatter:v=>v>0?fmtS(v):'',anchor:'end',align:'end',clamp:true,offset:4};}
-function dlBarV(color='#334155'){return{display:true,color,font:{size:11,weight:'700',family:"'Inter',sans-serif"},formatter:v=>v>0?fmtS(v):'',anchor:'end',align:'top',clamp:true};}
-function dlPct(color='#334155'){return{display:true,color,font:{size:12,weight:'700',family:"'Inter',sans-serif"},formatter:v=>v>0?v.toFixed(1)+'%':'',anchor:'end',align:'end',clamp:true,offset:4};}
+const bX={grid:{display:false},ticks:{color:'#64748B',font:{size:12,family:'Inter,sans-serif'}}};
+const bY={grid:{color:'rgba(0,0,0,.04)'},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>fS(v)}};
+const bYp={...bY,ticks:{...bY.ticks,callback:v=>v+'%'}};
+const bYn={grid:{display:false},border:{display:false},ticks:{color:'#334155',font:{size:13,weight:'600',family:'Inter,sans-serif'}}};
+const dlV=(c='#334155')=>({display:true,color:c,font:{size:11,weight:'700',family:'Inter,sans-serif'},formatter:v=>v>0?fS(v):'',anchor:'end',align:'top',clamp:true});
+const dlH=(c='#334155')=>({display:true,color:c,font:{size:12,weight:'700',family:'Inter,sans-serif'},formatter:v=>v>0?fS(v):'',anchor:'end',align:'end',clamp:true,offset:6});
+const dlHP=(c='#334155')=>({display:true,color:c,font:{size:12,weight:'700',family:'Inter,sans-serif'},formatter:v=>v>0?v.toFixed(1)+'%':'',anchor:'end',align:'end',clamp:true,offset:6});
 
 /* AGGREGATE */
-function gByYm(rows){
+function gYm(rows){
   const m={};
   rows.forEach(r=>{if(!r.yearMonth)return;const k=r.yearMonth;if(!m[k])m[k]={ym:k,year:r.year,month:r.month,sales:0,margin:0,orders:0};m[k].sales+=r.price;m[k].margin+=r.margin;if(r.type==='메인')m[k].orders+=1;});
   return Object.values(m).sort((a,b)=>a.ym-b.ym);
@@ -586,25 +505,25 @@ function gBy(rows,key){
   const m={};
   rows.forEach(r=>{
     let k=r[key]||'기타';
-    if(key==='channel'){k=normCh(r.channel);if(!k)return;}
+    if(key==='channel'){k=nCh(r.channel);if(!k)return;}
     if(!m[k])m[k]={key:k,sales:0,margin:0,orders:0};
     m[k].sales+=r.price;m[k].margin+=r.margin;if(r.type==='메인')m[k].orders+=1;
   });
   return Object.values(m).sort((a,b)=>b.sales-a.sales);
 }
-function abc(rows){
-  const tot=rows.reduce((s,r)=>s+r.sales,0);let cu=0;
-  rows.forEach(r=>{r.share=tot>0?r.sales/tot:0;cu+=r.share;r.cumul=cu;r.abc=cu<=.8?'A':cu<=.95?'B':'C';});
+function addABC(rows){
+  const t=rows.reduce((s,r)=>s+r.sales,0);let cu=0;
+  rows.forEach(r=>{r.share=t>0?r.sales/t:0;cu+=r.share;r.cumul=cu;r.abc=cu<=.8?'A':cu<=.95?'B':'C';});
   return rows;
 }
-function buildKpi(rows,container){
+function bKpi(rows,container){
   const s=rows.reduce((a,r)=>a+r.price,0),m=rows.reduce((a,r)=>a+r.margin,0),o=rows.filter(r=>r.type==='메인').length;
   const mp=s>0?m/s:0;
   document.getElementById(container).innerHTML=`
-    <div class="kpi blue"><div class="kpi-deco"></div><div class="kpi-label">Total Sales</div><div class="kpi-val">${fmtS(s)}</div><div class="kpi-sub">${fmt(s)}원</div></div>
-    <div class="kpi green"><div class="kpi-deco"></div><div class="kpi-label">Total Margin</div><div class="kpi-val">${fmtS(m)}</div><div class="kpi-sub">${fmtPct(mp)}</div></div>
-    <div class="kpi amber"><div class="kpi-deco"></div><div class="kpi-label">Orders</div><div class="kpi-val">${fmt(o)}</div><div class="kpi-sub">Avg. ${fmtS(o?s/o:0)}원</div></div>
-    <div class="kpi slate"><div class="kpi-deco"></div><div class="kpi-label">Margin Rate</div><div class="kpi-val">${fmtPct(mp)}</div><div class="kpi-sub">&nbsp;</div></div>
+    <div class="kpi bl"><div class="kpi-deco"></div><div class="kl">Total Sales</div><div class="kv">${fS(s)}</div><div class="ks">${fmt(s)}원</div></div>
+    <div class="kpi gr"><div class="kpi-deco"></div><div class="kl">Total Margin</div><div class="kv">${fS(m)}</div><div class="ks">${fP(mp)}</div></div>
+    <div class="kpi am"><div class="kpi-deco"></div><div class="kl">Orders</div><div class="kv">${fmt(o)}</div><div class="ks">Avg. ${fS(o?s/o:0)}원</div></div>
+    <div class="kpi sl"><div class="kpi-deco"></div><div class="kl">Margin Rate</div><div class="kv">${fP(mp)}</div><div class="ks">&nbsp;</div></div>
   `;
 }
 
@@ -617,139 +536,143 @@ function renderHome(){
   const td=(yr===ty()&&mo===tm())?new Date().getDate():31;
 
   const mtd=RAW.filter(r=>Number(r.yearMonth)===ym);
-  const psp=RAW.filter(r=>Number(r.yearMonth)===pmYm&&parseInt((r.date||'').split('-')[2]||'99')<=td);
-  const ysp=RAW.filter(r=>Number(r.yearMonth)===yoyYm&&parseInt((r.date||'').split('-')[2]||'99')<=td);
+  const psp=RAW.filter(r=>Number(r.yearMonth)===pmYm);
+  const ysp=RAW.filter(r=>Number(r.yearMonth)===yoyYm);
   const ytd=RAW.filter(r=>Number(r.year)===yr);
 
+  // 전월/전년 동기간 비교
+  const pspT=psp.filter(r=>parseInt((r.outDate||r.date||'').split('-')[2]||'99')<=td);
+  const yspT=ysp.filter(r=>parseInt((r.outDate||r.date||'').split('-')[2]||'99')<=td);
+
   const mS=mtd.reduce((a,r)=>a+r.price,0),mM=mtd.reduce((a,r)=>a+r.margin,0),mO=mtd.filter(r=>r.type==='메인').length;
-  const pS=psp.reduce((a,r)=>a+r.price,0),pM=psp.reduce((a,r)=>a+r.margin,0),pO=psp.filter(r=>r.type==='메인').length;
-  const yS=ysp.reduce((a,r)=>a+r.price,0),yM=ysp.reduce((a,r)=>a+r.margin,0),yO=ysp.filter(r=>r.type==='메인').length;
+  const pS=pspT.reduce((a,r)=>a+r.price,0),pM=pspT.reduce((a,r)=>a+r.margin,0),pO=pspT.filter(r=>r.type==='메인').length;
+  const yS=yspT.reduce((a,r)=>a+r.price,0),yM=yspT.reduce((a,r)=>a+r.margin,0),yO=yspT.filter(r=>r.type==='메인').length;
   const ytS=ytd.reduce((a,r)=>a+r.price,0),ytM=ytd.reduce((a,r)=>a+r.margin,0),ytO=ytd.filter(r=>r.type==='메인').length;
   const mp=mS>0?mM/mS:0,ymp=ytS>0?ytM/ytS:0;
 
   document.getElementById('kpiMtd').innerHTML=`
-    <div class="kpi blue"><div class="kpi-deco"></div><div class="kpi-label">${yr}년 ${mo}월 Sales</div><div class="kpi-val">${fmtS(mS)}</div><div class="kpi-sub">${fmt(mS)}원</div>${dblDelta(mS,yS,'vs YoY',pS,'vs MoM')}</div>
-    <div class="kpi green"><div class="kpi-deco"></div><div class="kpi-label">${yr}년 ${mo}월 Margin</div><div class="kpi-val">${fmtS(mM)}</div><div class="kpi-sub">${fmtPct(mp)}</div>${dblDelta(mM,yM,'vs YoY',pM,'vs MoM')}</div>
-    <div class="kpi amber"><div class="kpi-deco"></div><div class="kpi-label">${yr}년 ${mo}월 Orders</div><div class="kpi-val">${fmt(mO)}</div><div class="kpi-sub">Avg. ${fmtS(mO?mS/mO:0)}원</div>${dblDelta(mO,yO,'vs YoY',pO,'vs MoM')}</div>
-    <div class="kpi purple"><div class="kpi-deco"></div><div class="kpi-label">Margin Rate</div><div class="kpi-val">${fmtPct(mp)}</div><div class="kpi-sub">&nbsp;</div></div>
+    <div class="kpi bl"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Sales</div><div class="kv">${fS(mS)}</div><div class="ks">${fmt(mS)}원</div>${dd(mS,yS,'vs YoY',pS,'vs MoM')}</div>
+    <div class="kpi gr"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Margin</div><div class="kv">${fS(mM)}</div><div class="ks">${fP(mp)}</div>${dd(mM,yM,'vs YoY',pM,'vs MoM')}</div>
+    <div class="kpi am"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Orders</div><div class="kv">${fmt(mO)}</div><div class="ks">Avg. ${fS(mO?mS/mO:0)}원</div>${dd(mO,yO,'vs YoY',pO,'vs MoM')}</div>
+    <div class="kpi pu"><div class="kpi-deco"></div><div class="kl">Margin Rate</div><div class="kv">${fP(mp)}</div><div class="ks">&nbsp;</div></div>
   `;
   document.getElementById('kpiYtd').innerHTML=`
-    <div class="kpi white"><div class="kpi-label">${yr} YTD (연누계) Sales</div><div class="kpi-val">${fmtS(ytS)}</div><div class="kpi-sub">${fmt(ytS)}원</div></div>
-    <div class="kpi white"><div class="kpi-label">${yr} YTD Margin</div><div class="kpi-val">${fmtS(ytM)}</div><div class="kpi-sub">${fmtPct(ymp)}</div></div>
-    <div class="kpi white"><div class="kpi-label">${yr} Total Orders</div><div class="kpi-val">${fmt(ytO)}</div><div class="kpi-sub">Avg. (평균) ${fmt(Math.round(ytO/mo))}/mo</div></div>
-    <div class="kpi white"><div class="kpi-label">Avg. (평균) Order Value</div><div class="kpi-val">${fmtS(ytO?ytS/ytO:0)}</div><div class="kpi-sub">&nbsp;</div></div>
+    <div class="kpi wh"><div class="kl">${yr} YTD (연누계) Sales</div><div class="kv">${fS(ytS)}</div><div class="ks">${fmt(ytS)}원</div></div>
+    <div class="kpi wh"><div class="kl">${yr} YTD Margin</div><div class="kv">${fS(ytM)}</div><div class="ks">${fP(ymp)}</div></div>
+    <div class="kpi wh"><div class="kl">${yr} Total Orders</div><div class="kv">${fmt(ytO)}</div><div class="ks">Avg. (평균) ${fmt(Math.round(ytO/mo))}/mo</div></div>
+    <div class="kpi wh"><div class="kl">Avg. (평균) Order Value</div><div class="kv">${fS(ytO?ytS/ytO:0)}</div><div class="ks">&nbsp;</div></div>
   `;
 
-  // Daily chart - 오늘까지만
+  // Channel bar (horizontal)
+  const chM={};
+  mtd.forEach(r=>{const ch=nCh(r.channel);if(!ch)return;if(!chM[ch])chM[ch]=0;chM[ch]+=r.price;});
+  const chD=Object.entries(chM).sort((a,b)=>b[1]-a[1]);
+  dc('homeChChart');
+  charts.homeChChart=new Chart(document.getElementById('homeChChart'),{
+    type:'bar',
+    data:{labels:chD.map(([k])=>k),datasets:[{data:chD.map(([,v])=>v),backgroundColor:C.map(c=>c+'22'),borderColor:C,borderWidth:1.5,datalabels:{...dlH('#334155')}}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:90}},
+      plugins:{legend:{display:false},datalabels:{}},scales:{x:{...bX,grid:{display:false}},y:bYn}}
+  });
+
+  // Daily chart - 출고일(outDate) 기준, 오늘까지만
   const dm={};
-  mtd.forEach(r=>{if(!r.date)return;const d=r.date.split('-')[2];if(parseInt(d)>td)return;if(!dm[d])dm[d]={s:0};dm[d].s+=r.price;});
-  const days=Object.keys(dm).sort(),sales=days.map(d=>dm[d].s);
+  mtd.forEach(r=>{
+    // outDate가 있으면 출고일, 없으면 주문일 fallback
+    const rawDate=r.outDate||r.date||'';
+    if(!rawDate)return;
+    const parts=rawDate.split('-');
+    if(parts.length<3)return;
+    // 출고일이 당월에 해당하는지 확인
+    const outYr=parseInt(parts[0]),outMo=parseInt(parts[1]),outDay=parseInt(parts[2]);
+    if(outYr!==yr||outMo!==mo)return;
+    if(outDay>td)return;
+    const d=String(outDay).padStart(2,'0');
+    if(!dm[d])dm[d]=0;
+    dm[d]+=r.price;
+  });
+  const days=Object.keys(dm).sort(),sales=days.map(d=>dm[d]);
   let acc=0;const cum=sales.map(v=>{acc+=v;return acc;});
   dc('dailyChart');
   charts.dailyChart=new Chart(document.getElementById('dailyChart'),{
     type:'bar',
     data:{labels:days.map(d=>d+'일'),datasets:[
       {label:'Daily',data:sales,backgroundColor:'rgba(37,99,235,.12)',borderColor:'#2563EB',borderWidth:1.5,yAxisID:'y',order:2,
-        datalabels:{display:true,color:'#2563EB',font:{size:11,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>v>0?fmtS(v):'',clamp:true}},
+        datalabels:{display:true,color:'#2563EB',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>v>0?fS(v):'',clamp:true}},
       {label:'Cumul.',data:cum,type:'line',borderColor:'#059669',borderWidth:2.5,pointRadius:3,tension:.3,fill:false,yAxisID:'y2',order:1,
-        datalabels:{display:ctx=>ctx.dataIndex===cum.length-1,color:'#059669',font:{size:12,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>fmtS(v)}}
+        datalabels:{display:ctx=>ctx.dataIndex===cum.length-1,color:'#059669',font:{size:12,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v)}}
     ]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28}},
       plugins:{legend:{display:false},datalabels:{}},
-      scales:{x:baseX,y:{...baseY,position:'left'},y2:{position:'right',grid:{display:false},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>fmtS(v)}}}}
+      scales:{x:bX,y:{...bY,grid:{display:false},position:'left'},y2:{position:'right',grid:{display:false},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>fS(v)}}}}
   });
 
-  // Channel bar chart
-  const chMap={};
-  mtd.forEach(r=>{const ch=normCh(r.channel);if(!ch)return;if(!chMap[ch])chMap[ch]=0;chMap[ch]+=r.price;});
-  const chData=Object.entries(chMap).sort((a,b)=>b[1]-a[1]);
-  dc('homeChChart');
-  charts.homeChChart=new Chart(document.getElementById('homeChChart'),{
-    type:'bar',
-    data:{labels:chData.map(([k])=>k),datasets:[{label:'Sales',data:chData.map(([,v])=>v),backgroundColor:C.map(c=>c+'22'),borderColor:C,borderWidth:1.5,
-      datalabels:{...dlBar('#334155')}}]},
-    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:80}},
-      plugins:{legend:{display:false},datalabels:{}},
-      scales:{x:{...baseX,grid:{display:false}},y:noGridY}}
-  });
-}
-
-/* ══ MONTHLY ══ */
-function renderMonthly(){
-  if(!RAW.length)return;
-  const{year}=gf();
-  const rows=year?RAW.filter(r=>Number(r.year)===year):RAW;
-  const mn=gByYm(rows);
-  const tS=mn.reduce((a,r)=>a+r.sales,0),tM=mn.reduce((a,r)=>a+r.margin,0),tO=mn.reduce((a,r)=>a+r.orders,0);
-  const mp=tS>0?tM/tS:0;
-  document.getElementById('kpiMonthly').innerHTML=`
-    <div class="kpi blue"><div class="kpi-deco"></div><div class="kpi-label">Period Sales</div><div class="kpi-val">${fmtS(tS)}</div><div class="kpi-sub">${fmt(tS)}원</div></div>
-    <div class="kpi green"><div class="kpi-deco"></div><div class="kpi-label">Period Margin</div><div class="kpi-val">${fmtS(tM)}</div><div class="kpi-sub">${fmtPct(mp)}</div></div>
-    <div class="kpi amber"><div class="kpi-deco"></div><div class="kpi-label">Total Orders</div><div class="kpi-val">${fmt(tO)}</div><div class="kpi-sub">&nbsp;</div></div>
-    <div class="kpi slate"><div class="kpi-deco"></div><div class="kpi-label">Avg. (평균) AOV</div><div class="kpi-val">${fmtS(tO?tS/tO:0)}</div><div class="kpi-sub">&nbsp;</div></div>
-  `;
+  // Monthly chart
+  const{year:yr2}=gf();
+  const mrows=yr2?RAW.filter(r=>Number(r.year)===yr2):RAW;
+  const mn=gYm(mrows);
   dc('monthlyChart');
   charts.monthlyChart=new Chart(document.getElementById('monthlyChart'),{
     type:'bar',
-    data:{labels:mn.map(r=>fmtYm(r.ym)),datasets:[
+    data:{labels:mn.map(r=>fYm(r.ym)),datasets:[
       {label:'Sales',data:mn.map(r=>r.sales),backgroundColor:'rgba(37,99,235,.12)',borderColor:'#2563EB',borderWidth:1.5,yAxisID:'y',
-        datalabels:{display:true,color:'#2563EB',font:{size:11,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>fmtS(v),clamp:true}},
+        datalabels:{display:true,color:'#2563EB',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}},
       {label:'Margin',data:mn.map(r=>r.margin),backgroundColor:'rgba(5,150,105,.12)',borderColor:'#059669',borderWidth:1.5,yAxisID:'y',
-        datalabels:{display:true,color:'#059669',font:{size:10,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>fmtS(v),clamp:true}},
+        datalabels:{display:true,color:'#059669',font:{size:10,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}},
       {label:'Margin %',data:mn.map(r=>r.sales>0?r.margin/r.sales*100:0),type:'line',borderColor:'#D97706',borderWidth:2,pointRadius:3,tension:.3,fill:false,yAxisID:'y2',
-        datalabels:{display:true,color:'#D97706',font:{size:11,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>v.toFixed(1)+'%',clamp:true}}
+        datalabels:{display:true,color:'#D97706',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>v.toFixed(1)+'%',clamp:true}}
     ]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:36}},
-      plugins:{legend:{display:true,labels:{color:'#64748B',font:{size:12,family:"'Inter',sans-serif"},boxWidth:12,usePointStyle:true}},datalabels:{}},
-      scales:{x:baseX,y:{...baseY,position:'left'},y2:{position:'right',grid:{display:false},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>v.toFixed(1)+'%'}}}}
+      plugins:{legend:{position:'top',align:'end',labels:{color:'#64748B',font:{size:12,family:'Inter,sans-serif'},boxWidth:10,usePointStyle:true,padding:16}},datalabels:{}},
+      scales:{x:bX,y:{...bY,grid:{display:false},position:'left'},y2:{position:'right',grid:{display:false},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>v.toFixed(1)+'%'}}}}
   });
 }
 
 /* ══ BRAND ══ */
 function renderBrand(){
   if(!RAW.length)return;
-  const rows=fr(RAW),data=abc(gBy(rows,'brand'));
-  buildKpi(rows,'kpiBrand');
+  const rows=fr(RAW),data=addABC(gBy(rows,'brand'));
+  bKpi(rows,'kpiBrand');
 
-  function hBarChart(id,vals,labels,isPercent){
+  function hBar(id,vals,labs,isP){
     dc(id);
     charts[id]=new Chart(document.getElementById(id),{
       type:'bar',
-      data:{labels,datasets:[{label:isPercent?'Margin %':'Sales',data:vals,backgroundColor:C.map(c=>c+'1A'),borderColor:C,borderWidth:1.5,
-        datalabels:isPercent?dlPct('#334155'):dlBar('#334155')}]},
-      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:90}},
+      data:{labels:labs,datasets:[{data:vals,backgroundColor:C.map(c=>c+'1A'),borderColor:C,borderWidth:1.5,
+        datalabels:isP?{...dlHP('#334155')}:{...dlH('#334155')}}]},
+      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:100}},
         plugins:{legend:{display:false},datalabels:{}},
-        scales:{x:{...baseX,grid:{display:false}},y:noGridY}}
+        scales:{x:{...bX,grid:{display:false}},y:bYn}}
     });
   }
-  hBarChart('brandSalesChart',data.map(r=>r.sales),data.map(r=>r.key),false);
-  hBarChart('brandMgnChart',data.map(r=>r.sales>0?r.margin/r.sales*100:0),data.map(r=>r.key),true);
+  hBar('brandSalesChart',data.map(r=>r.sales),data.map(r=>r.key),false);
+  hBar('brandMgnChart',data.map(r=>r.sales>0?r.margin/r.sales*100:0),data.map(r=>r.key),true);
 
   document.getElementById('brandTbody').innerHTML=data.map(r=>{
     const mp=r.sales>0?r.margin/r.sales:0,ac=r.abc==='A'?'abc-a':r.abc==='B'?'abc-b':'abc-c';
     return`<tr><td><span class="${ac}">${r.abc}</span></td><td style="font-weight:600">${r.key}</td>
-      <td class="num">${fmt(r.sales)}</td><td class="num">${fmt(r.margin)}</td>
-      <td class="num">${fmtPct(mp)}</td><td class="num">${fmt(r.orders)}</td>
-      <td><div class="bar-row"><div class="bar-track"><div class="bar-fill bf-blue" style="width:${(r.share*100).toFixed(1)}%"></div></div><span class="bar-pct">${(r.share*100).toFixed(1)}%</span></div></td>
-      <td class="num">${(r.cumul*100).toFixed(1)}%</td></tr>`;
+      <td class="n">${fmt(r.sales)}</td><td class="n">${fmt(r.margin)}</td>
+      <td class="n">${fP(mp)}</td><td class="n">${fmt(r.orders)}</td>
+      <td><div class="br"><div class="bt"><div class="bf bbl" style="width:${(r.share*100).toFixed(1)}%"></div></div><span class="bp">${(r.share*100).toFixed(1)}%</span></div></td>
+      <td class="n">${(r.cumul*100).toFixed(1)}%</td></tr>`;
   }).join('');
 }
 
-/* ══ ITEMS ══ */
+/* ══ CATEGORY ══ */
 function renderItems(){
   if(!RAW.length)return;
-  const rows=fr(RAW),data=abc(gBy(rows,'item'));
-  buildKpi(rows,'kpiItems');
+  const rows=fr(RAW),data=addABC(gBy(rows,'item'));
+  bKpi(rows,'kpiItems');
 
-  function hBar(id,vals,labels,isP){
+  function hBar(id,vals,labs,isP){
     dc(id);
     charts[id]=new Chart(document.getElementById(id),{
       type:'bar',
-      data:{labels,datasets:[{data:vals,backgroundColor:C.map(c=>c+'1A'),borderColor:C,borderWidth:1.5,
-        datalabels:isP?dlPct('#334155'):dlBar('#334155')}]},
-      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:90}},
+      data:{labels:labs,datasets:[{data:vals,backgroundColor:C.map(c=>c+'1A'),borderColor:C,borderWidth:1.5,
+        datalabels:isP?{...dlHP('#334155')}:{...dlH('#334155')}}]},
+      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:100}},
         plugins:{legend:{display:false},datalabels:{}},
-        scales:{x:{...baseX,grid:{display:false}},y:noGridY}}
+        scales:{x:{...bX,grid:{display:false}},y:bYn}}
     });
   }
   hBar('itemsSalesChart',data.map(r=>r.sales),data.map(r=>r.key),false);
@@ -758,10 +681,10 @@ function renderItems(){
   document.getElementById('itemsTbody').innerHTML=data.map(r=>{
     const mp=r.sales>0?r.margin/r.sales:0,ac=r.abc==='A'?'abc-a':r.abc==='B'?'abc-b':'abc-c';
     return`<tr><td><span class="${ac}">${r.abc}</span></td><td style="font-weight:600">${r.key}</td>
-      <td class="num">${fmt(r.sales)}</td><td class="num">${fmt(r.margin)}</td>
-      <td class="num">${fmtPct(mp)}</td><td class="num">${fmt(r.orders)}</td>
-      <td><div class="bar-row"><div class="bar-track"><div class="bar-fill bf-green" style="width:${(r.share*100).toFixed(1)}%"></div></div><span class="bar-pct">${(r.share*100).toFixed(1)}%</span></div></td>
-      <td class="num">${(r.cumul*100).toFixed(1)}%</td></tr>`;
+      <td class="n">${fmt(r.sales)}</td><td class="n">${fmt(r.margin)}</td>
+      <td class="n">${fP(mp)}</td><td class="n">${fmt(r.orders)}</td>
+      <td><div class="br"><div class="bt"><div class="bf bgr" style="width:${(r.share*100).toFixed(1)}%"></div></div><span class="bp">${(r.share*100).toFixed(1)}%</span></div></td>
+      <td class="n">${(r.cumul*100).toFixed(1)}%</td></tr>`;
   }).join('');
 }
 
@@ -769,17 +692,17 @@ function renderItems(){
 function renderChannel(){
   if(!RAW.length)return;
   const rows=fr(RAW),data=gBy(rows,'channel'),total=data.reduce((a,r)=>a+r.sales,0);
-  buildKpi(rows,'kpiChannel');
+  bKpi(rows,'kpiChannel');
 
-  function vBar(id,vals,labels,isP){
+  function vBar(id,vals,labs,isP){
     dc(id);
     charts[id]=new Chart(document.getElementById(id),{
       type:'bar',
-      data:{labels,datasets:[{data:vals,backgroundColor:C.map(c=>c+'1A'),borderColor:C,borderWidth:1.5,
-        datalabels:{display:true,color:'#334155',font:{size:12,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>isP?v.toFixed(1)+'%':fmtS(v),clamp:true}}]},
+      data:{labels:labs,datasets:[{data:vals,backgroundColor:C.map(c=>c+'1A'),borderColor:C,borderWidth:1.5,
+        datalabels:{display:true,color:'#334155',font:{size:12,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>isP?v.toFixed(1)+'%':fS(v),clamp:true}}]},
       options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28}},
         plugins:{legend:{display:false},datalabels:{}},
-        scales:{x:baseX,y:isP?{...baseYpct,grid:{display:false}}:{...baseY,grid:{display:false}}}}
+        scales:{x:bX,y:{...bY,grid:{display:false}}}}
     });
   }
   vBar('chSalesChart',data.map(r=>r.sales),data.map(r=>r.key),false);
@@ -787,32 +710,30 @@ function renderChannel(){
 
   document.getElementById('chTbody').innerHTML=data.map(r=>{
     const mp=r.sales>0?r.margin/r.sales:0,share=total>0?r.sales/total:0;
-    return`<tr><td><span class="tag tag-blue">${r.key}</span></td>
-      <td class="num">${fmt(r.sales)}</td><td class="num">${fmt(r.margin)}</td>
-      <td class="num">${fmtPct(mp)}</td><td class="num">${fmt(r.orders)}</td>
-      <td><div class="bar-row"><div class="bar-track"><div class="bar-fill bf-blue" style="width:${(share*100).toFixed(1)}%"></div></div><span class="bar-pct">${(share*100).toFixed(1)}%</span></div></td></tr>`;
+    return`<tr><td><span class="tag tb">${r.key}</span></td>
+      <td class="n">${fmt(r.sales)}</td><td class="n">${fmt(r.margin)}</td>
+      <td class="n">${fP(mp)}</td><td class="n">${fmt(r.orders)}</td>
+      <td><div class="br"><div class="bt"><div class="bf bbl" style="width:${(share*100).toFixed(1)}%"></div></div><span class="bp">${(share*100).toFixed(1)}%</span></div></td></tr>`;
   }).join('');
 }
 
 /* ══ TREND ══ */
 function renderTrend(){
   if(!RAW.length)return;
-  const{year}=gf();
-  const rows=year?RAW.filter(r=>Number(r.year)===year):RAW;
-  const mn=gByYm(rows),labels=mn.map(r=>fmtYm(r.ym));
+  const{year}=gf(),rows=year?RAW.filter(r=>Number(r.year)===year):RAW;
+  const mn=gYm(rows),labels=mn.map(r=>fYm(r.ym));
 
-  function lineTrend(chartId,legId,key,getKey){
+  function lineTrend(cid,lid,key,getK){
     const top=gBy(rows,key).slice(0,6).map(r=>r.key);
-    document.getElementById(legId).innerHTML=top.map((k,i)=>`<span class="leg"><span class="leg-dot" style="background:${C[i]};border-radius:2px"></span>${k}</span>`).join('');
-    dc(chartId);
-    charts[chartId]=new Chart(document.getElementById(chartId),{
-      type:'bar',
-      data:{labels,datasets:top.map((k,i)=>({label:k,data:mn.map(ym=>rows.filter(r=>Number(r.yearMonth)===ym.ym&&getKey(r)===k).reduce((a,r)=>a+r.price,0)),backgroundColor:C[i]+'22',borderColor:C[i],borderWidth:1.5,datalabels:{display:false}}))},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{}},
-        scales:{x:baseX,y:{...baseY,stacked:false}}}
+    document.getElementById(lid).innerHTML=top.map((k,i)=>`<span class="li"><span class="ld" style="background:${C[i]};border-radius:2px"></span>${k}</span>`).join('');
+    dc(cid);
+    charts[cid]=new Chart(document.getElementById(cid),{
+      type:'line',
+      data:{labels,datasets:top.map((k,i)=>({label:k,data:mn.map(ym=>rows.filter(r=>Number(r.yearMonth)===ym.ym&&getK(r)===k).reduce((a,r)=>a+r.price,0)),borderColor:C[i],borderWidth:2,pointRadius:3,tension:.3,fill:false,datalabels:{display:false}}))},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{}},scales:{x:bX,y:{...bY,grid:{display:false}}}}
     });
   }
-  lineTrend('tChChart','tChLeg','channel',r=>normCh(r.channel));
+  lineTrend('tChChart','tChLeg','channel',r=>nCh(r.channel));
   lineTrend('tItChart','tItLeg','item',r=>r.item);
   lineTrend('tBrChart','tBrLeg','brand',r=>r.brand);
 
@@ -825,10 +746,9 @@ function renderTrend(){
     const rc=i===0?'rk r1':i===1?'rk r2':i===2?'rk r3':'rk';
     return`<tr><td><span class="${rc}">${i+1}</span></td>
       <td style="font-size:13px;font-weight:600">${r.model}</td>
-      <td><span class="tag tag-amber">${r.item||'—'}</span></td>
-      <td><span class="tag tag-green">${r.brand||'—'}</span></td>
-      <td class="num">${fmt(r.sales)}</td><td class="num">${fmtPct(mp)}</td><td class="num">${fmt(r.orders)}</td>
-      <td><div class="bar-row"><div class="bar-track"><div class="bar-fill bf-blue" style="width:${(share*100).toFixed(1)}%"></div></div><span class="bar-pct">${(share*100).toFixed(1)}%</span></div></td></tr>`;
+      <td><span class="tag ta">${r.item||'—'}</span></td><td><span class="tag tg">${r.brand||'—'}</span></td>
+      <td class="n">${fmt(r.sales)}</td><td class="n">${fP(mp)}</td><td class="n">${fmt(r.orders)}</td>
+      <td><div class="br"><div class="bt"><div class="bf bbl" style="width:${(share*100).toFixed(1)}%"></div></div><span class="bp">${(share*100).toFixed(1)}%</span></div></td></tr>`;
   }).join('');
 }
 
@@ -838,9 +758,9 @@ function renderPurchase(){
   const rows=fr(RAW_ALL);
   const tE=rows.reduce((a,r)=>a+(r.extCost||0),0),tO=rows.reduce((a,r)=>a+(r.assetCost||0),0);
   document.getElementById('kpiPurchase').innerHTML=`
-    <div class="kpi amber"><div class="kpi-deco"></div><div class="kpi-label">External Purchase</div><div class="kpi-val">${fmtS(tE)}</div><div class="kpi-sub">${fmt(tE)}원</div></div>
-    <div class="kpi purple"><div class="kpi-deco"></div><div class="kpi-label">Asset Value</div><div class="kpi-val">${fmtS(tO)}</div><div class="kpi-sub">${fmt(tO)}원</div></div>
-    <div class="kpi slate"><div class="kpi-deco"></div><div class="kpi-label">Total Purchase</div><div class="kpi-val">${fmtS(tE+tO)}</div><div class="kpi-sub">&nbsp;</div></div>
+    <div class="kpi am"><div class="kpi-deco"></div><div class="kl">External Purchase</div><div class="kv">${fS(tE)}</div><div class="ks">${fmt(tE)}원</div></div>
+    <div class="kpi pu"><div class="kpi-deco"></div><div class="kl">Asset Value</div><div class="kv">${fS(tO)}</div><div class="ks">${fmt(tO)}원</div></div>
+    <div class="kpi sl"><div class="kpi-deco"></div><div class="kl">Total Purchase</div><div class="kv">${fS(tE+tO)}</div><div class="ks">&nbsp;</div></div>
   `;
   const mE={},mO={};
   rows.forEach(r=>{const k=Number(r.yearMonth);if(!k)return;if(!mE[k]){mE[k]=0;mO[k]=0;}mE[k]+=r.extCost||0;mO[k]+=r.assetCost||0;});
@@ -848,15 +768,15 @@ function renderPurchase(){
   dc('purchChart');
   charts.purchChart=new Chart(document.getElementById('purchChart'),{
     type:'bar',
-    data:{labels:ks.map(k=>fmtYm(parseInt(k))),datasets:[
+    data:{labels:ks.map(k=>fYm(parseInt(k))),datasets:[
       {label:'External',data:ks.map(k=>mE[k]||0),backgroundColor:'rgba(217,119,6,.12)',borderColor:'#D97706',borderWidth:1.5,
-        datalabels:{display:true,color:'#D97706',font:{size:11,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>v>0?fmtS(v):'',clamp:true}},
+        datalabels:{display:true,color:'#D97706',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>v>0?fS(v):'',clamp:true}},
       {label:'Asset',data:ks.map(k=>mO[k]||0),backgroundColor:'rgba(124,58,237,.1)',borderColor:'#7C3AED',borderWidth:1.5,
-        datalabels:{display:false}}
+        datalabels:{display:true,color:'#7C3AED',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>v>0?fS(v):'',clamp:true}}
     ]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28}},
-      plugins:{legend:{display:true,labels:{color:'#64748B',font:{size:12,family:"'Inter',sans-serif"},boxWidth:12,usePointStyle:true}},datalabels:{}},
-      scales:{x:baseX,y:{...baseY,grid:{display:false}}}}
+      plugins:{legend:{display:true,position:'top',align:'end',labels:{color:'#64748B',font:{size:12,family:'Inter,sans-serif'},boxWidth:10,usePointStyle:true,padding:16}},datalabels:{}},
+      scales:{x:bX,y:{...bY,grid:{display:false}}}}
   });
 
   const sm={};
@@ -864,17 +784,16 @@ function renderPurchase(){
   const sd=Object.values(sm).sort((a,b)=>b.t-a.t),st=sd.reduce((a,r)=>a+r.t,0);
   document.getElementById('purchTbody').innerHTML=sd.map(r=>{
     const share=st>0?r.t/st:0,avg=r.c>0?r.t/r.c:0;
-    return`<tr><td style="font-weight:500">${r.n}</td><td class="num">${fmt(r.t)}</td><td class="num">${fmt(r.c)}</td>
-      <td><div class="bar-row"><div class="bar-track"><div class="bar-fill bf-amber" style="width:${(share*100).toFixed(1)}%"></div></div><span class="bar-pct">${(share*100).toFixed(1)}%</span></div></td>
-      <td class="num">${fmt(avg)}</td></tr>`;
+    return`<tr><td style="font-weight:500">${r.n}</td><td class="n">${fmt(r.t)}</td><td class="n">${fmt(r.c)}</td>
+      <td><div class="br"><div class="bt"><div class="bf bam" style="width:${(share*100).toFixed(1)}%"></div></div><span class="bp">${(share*100).toFixed(1)}%</span></div></td>
+      <td class="n">${fmt(avg)}</td></tr>`;
   }).join('');
 }
 
 /* ══ YOY ══ */
 function renderYoy(){
   if(!RAW.length)return;
-  const{year}=gf();
-  const cy=year||ty(),py=cy-1;
+  const{year}=gf(),cy=year||ty(),py=cy-1;
   const cmo=[...new Set(RAW.filter(r=>Number(r.year)===cy).map(r=>Number(r.month)))].filter(Boolean);
   const maxM=cmo.length>0?Math.max(...cmo):12;
   const mos=[1,2,3,4,5,6,7,8,9,10,11,12];
@@ -891,50 +810,50 @@ function renderYoy(){
   const mpP=spS>0?spM/spS:0,mpC=cS>0?cM/cS:0;
 
   document.getElementById('yoyChTitle').textContent=`${py} vs ${cy} Sales Comparison`;
-  document.getElementById('yoyLeg').innerHTML=`<span class="leg"><span class="leg-dot" style="background:#94A3B8"></span>${py}</span><span class="leg"><span class="leg-dot" style="background:#2563EB"></span>${cy}</span>`;
+  document.getElementById('yoyLeg').innerHTML=`<span class="li"><span class="ld" style="background:#94A3B8"></span>${py}</span><span class="li"><span class="ld" style="background:var(--blue)"></span>${cy}</span>`;
   document.getElementById('yoyTh1').textContent=py+'년';
   document.getElementById('yoyTh2').textContent=cy+'년';
   document.getElementById('kpiYoy').innerHTML=`
-    <div class="kpi blue"><div class="kpi-deco"></div><div class="kpi-label">${cy} YTD (1~${maxM}월)</div><div class="kpi-val">${fmtS(cS)}</div><div class="kpi-sub">${yd(cS,spS)} vs ${py}</div></div>
-    <div class="kpi green"><div class="kpi-deco"></div><div class="kpi-label">${cy} YTD Margin</div><div class="kpi-val">${fmtS(cM)}</div><div class="kpi-sub">${fmtPct(mpC)}</div></div>
-    <div class="kpi amber"><div class="kpi-deco"></div><div class="kpi-label">YoY Growth</div><div class="kpi-val">${gr}%</div><div class="kpi-sub">vs ${py} same period</div></div>
-    <div class="kpi slate"><div class="kpi-deco"></div><div class="kpi-label">Margin Change</div><div class="kpi-val">${((mpC-mpP)*100).toFixed(1)}%p</div><div class="kpi-sub">${fmtPct(mpP)} → ${fmtPct(mpC)}</div></div>
+    <div class="kpi bl"><div class="kpi-deco"></div><div class="kl">${cy} YTD (1~${maxM}월)</div><div class="kv">${fS(cS)}</div><div class="ks">${yd(cS,spS)} vs ${py}</div></div>
+    <div class="kpi gr"><div class="kpi-deco"></div><div class="kl">${cy} YTD Margin</div><div class="kv">${fS(cM)}</div><div class="ks">${fP(mpC)}</div></div>
+    <div class="kpi am"><div class="kpi-deco"></div><div class="kl">YoY Growth</div><div class="kv">${gr}%</div><div class="ks">vs ${py} same period</div></div>
+    <div class="kpi sl"><div class="kpi-deco"></div><div class="kl">Margin Change</div><div class="kv">${((mpC-mpP)*100).toFixed(1)}%p</div><div class="ks">${fP(mpP)} → ${fP(mpC)}</div></div>
   `;
 
-  const labels=mos.map(m=>monthEn(m));
+  const labels=mos.map(m=>mEn(m));
   dc('yoyChart');
   charts.yoyChart=new Chart(document.getElementById('yoyChart'),{
     type:'bar',
     data:{labels,datasets:[
       {label:`${py}`,data:mos.map(m=>dP[m].s),backgroundColor:'rgba(148,163,184,.25)',borderColor:'#94A3B8',borderWidth:1.5,categoryPercentage:.7,barPercentage:.45,
-        datalabels:{display:ctx=>dP[mos[ctx.dataIndex]].s>0,color:'#64748B',font:{size:11,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>fmtS(v),clamp:true}},
+        datalabels:{display:ctx=>dP[mos[ctx.dataIndex]].s>0,color:'#64748B',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}},
       {label:`${cy}`,data:mos.map(m=>dC[m].s),backgroundColor:'rgba(37,99,235,.12)',borderColor:'#2563EB',borderWidth:1.5,categoryPercentage:.7,barPercentage:.45,
-        datalabels:{display:ctx=>dC[mos[ctx.dataIndex]].s>0,color:'#2563EB',font:{size:11,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>fmtS(v),clamp:true}}
+        datalabels:{display:ctx=>dC[mos[ctx.dataIndex]].s>0,color:'#2563EB',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}}
     ]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:32}},
-      plugins:{legend:{display:false},datalabels:{}},scales:{x:baseX,y:{...baseY,grid:{display:false}}}}
+      plugins:{legend:{display:false},datalabels:{}},scales:{x:bX,y:{...bY,grid:{display:false}}}}
   });
 
   dc('yoyMgnChart');
   charts.yoyMgnChart=new Chart(document.getElementById('yoyMgnChart'),{
     type:'line',
     data:{labels,datasets:[
-      {label:`${py} Mgn%`,data:mos.map(m=>dP[m].s>0?dP[m].m/dP[m].s*100:null),borderColor:'#94A3B8',borderWidth:2,pointRadius:3,tension:.3,fill:false,spanGaps:true,datalabels:{display:false}},
-      {label:`${cy} Mgn%`,data:mos.map(m=>dC[m].s>0?dC[m].m/dC[m].s*100:null),borderColor:'#059669',borderWidth:2.5,pointRadius:4,tension:.3,fill:false,spanGaps:true,
-        datalabels:{display:ctx=>ctx.dataset.data[ctx.dataIndex]!=null,color:'#059669',font:{size:12,weight:'700',family:"'Inter',sans-serif"},anchor:'end',align:'top',formatter:v=>v?v.toFixed(1)+'%':'',clamp:true}}
+      {label:`${py}`,data:mos.map(m=>dP[m].s>0?dP[m].m/dP[m].s*100:null),borderColor:'#94A3B8',borderWidth:2,pointRadius:3,tension:.3,fill:false,spanGaps:true,datalabels:{display:false}},
+      {label:`${cy}`,data:mos.map(m=>dC[m].s>0?dC[m].m/dC[m].s*100:null),borderColor:'#059669',borderWidth:2.5,pointRadius:4,tension:.3,fill:false,spanGaps:true,
+        datalabels:{display:ctx=>ctx.dataset.data[ctx.dataIndex]!=null,color:'#059669',font:{size:12,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>v?v.toFixed(1)+'%':'',clamp:true}}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:true,labels:{color:'#64748B',font:{size:12,family:"'Inter',sans-serif"},boxWidth:12,usePointStyle:true}},datalabels:{}},
-      scales:{x:baseX,y:{...baseYpct,grid:{display:false}}}}
+      plugins:{legend:{display:true,position:'top',align:'end',labels:{color:'#64748B',font:{size:12,family:'Inter,sans-serif'},boxWidth:10,usePointStyle:true,padding:16}},datalabels:{}},
+      scales:{x:bX,y:{...bYp,grid:{display:false}}}}
   });
 
   document.getElementById('yoyTbody').innerHTML=mos.map(m=>{
     const sP=dP[m].s,sC=dC[m].s,mpPm=sP>0?dP[m].m/sP:0,mpCm=sC>0?dC[m].m/sC:0,diff=sC-sP;
-    return`<tr><td>${monthEn(m)}</td>
-      <td class="num">${sP?fmt(sP):'—'}</td><td class="num">${sC?fmt(sC):'—'}</td>
-      <td class="num ${diff>=0?'yoy-up':'yoy-dn'}">${sP&&sC?(diff>=0?'+':'')+fmt(diff):'—'}</td>
-      <td class="num">${sP?yd(sC,sP):'—'}</td>
-      <td class="num">${sP?fmtPct(mpPm):'—'}</td><td class="num">${sC?fmtPct(mpCm):'—'}</td></tr>`;
+    return`<tr><td>${mEn(m)}</td>
+      <td class="n">${sP?fmt(sP):'—'}</td><td class="n">${sC?fmt(sC):'—'}</td>
+      <td class="n ${diff>=0?'yu':'yn'}">${sP&&sC?(diff>=0?'+':'')+fmt(diff):'—'}</td>
+      <td class="n">${sP?yd(sC,sP):'—'}</td>
+      <td class="n">${sP?fP(mpPm):'—'}</td><td class="n">${sC?fP(mpCm):'—'}</td></tr>`;
   }).join('');
 }
 
@@ -945,28 +864,57 @@ function renderTop10(){
   const yr=year||ty(),mo=month||tm();
   const ym=(yr%100)*100+mo;
   const rows=month?RAW.filter(r=>Number(r.yearMonth)===ym):RAW.filter(r=>Number(r.year)===yr);
-  const period=month?`${yr}년 ${mo}월`:`${yr}년 누계 (YTD)`;
+  const prevRows=month?RAW.filter(r=>Number(r.yearMonth)===((yr-1)%100)*100+mo):RAW.filter(r=>Number(r.year)===yr-1);
+  const period=month?`${yr}년 ${mo}월`:`${yr} YTD`;
 
-  document.getElementById('top10Sec').textContent=`Top 10 Rankings — ${period}`;
+  document.getElementById('top10SalesCompTitle').textContent=`Sales Top 10 — ${yr-1} vs ${yr}`;
+  document.getElementById('top10MgnCompTitle').textContent=`Margin Top 10 — ${yr-1} vs ${yr}`;
   document.getElementById('top10SalesTitle').textContent=`Sales Top 10 — ${period}`;
   document.getElementById('top10MgnTitle').textContent=`Margin Top 10 — ${period}`;
 
-  const mm={};
-  rows.forEach(r=>{const k=r.model||'기타';if(!mm[k])mm[k]={model:k,item:r.item,brand:r.brand,sales:0,margin:0,orders:0};mm[k].sales+=r.price;mm[k].margin+=r.margin;if(r.type==='메인')mm[k].orders+=1;});
-  const all=Object.values(mm);
-  const top10s=all.sort((a,b)=>b.sales-a.sales).slice(0,10);
-  const top10m=[...all].sort((a,b)=>b.margin-a.margin).slice(0,10);
+  // 모델별 집계
+  function buildMap(rws){
+    const m={};
+    rws.forEach(r=>{const k=r.model||'기타';if(!m[k])m[k]={model:k,item:r.item,brand:r.brand,sales:0,margin:0,orders:0};m[k].sales+=r.price;m[k].margin+=r.margin;if(r.type==='메인')m[k].orders+=1;});
+    return m;
+  }
+  const currMap=buildMap(rows),prevMap=buildMap(prevRows);
+  const allCurr=Object.values(currMap);
+  const top10S=allCurr.sort((a,b)=>b.sales-a.sales).slice(0,10);
+  const top10M=[...allCurr].sort((a,b)=>b.margin-a.margin).slice(0,10);
 
-  function rowHtml(r,i,valKey,isM){
+  // YoY 비교 차트
+  function yoyBarChart(cid,top10,valKey,currColor){
+    dc(cid);
+    const labs=top10.map(r=>r.model.length>12?r.model.slice(0,11)+'…':r.model);
+    const cVals=top10.map(r=>r[valKey]);
+    const pVals=top10.map(r=>(prevMap[r.model]||{})[valKey]||0);
+    charts[cid]=new Chart(document.getElementById(cid),{
+      type:'bar',
+      data:{labels:labs,datasets:[
+        {label:`${yr-1}`,data:pVals,backgroundColor:'rgba(148,163,184,.3)',borderColor:'#94A3B8',borderWidth:1.5,categoryPercentage:.75,barPercentage:.45,
+          datalabels:{display:ctx=>pVals[ctx.dataIndex]>0,color:'#64748B',font:{size:10,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}},
+        {label:`${yr}`,data:cVals,backgroundColor:currColor+'22',borderColor:currColor,borderWidth:1.5,categoryPercentage:.75,barPercentage:.45,
+          datalabels:{display:ctx=>cVals[ctx.dataIndex]>0,color:currColor,font:{size:10,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28}},
+        plugins:{legend:{display:false},datalabels:{}},
+        scales:{x:bX,y:{...bY,grid:{display:false}}}}
+    });
+  }
+  yoyBarChart('top10SalesCompChart',top10S,'sales','#2563EB');
+  yoyBarChart('top10MgnCompChart',top10M,'margin','#059669');
+
+  function rowHtml(r,i,valKey){
     const val=r[valKey],mp=r.sales>0?r.margin/r.sales:0;
     const rc=i===0?'rk r1':i===1?'rk r2':i===2?'rk r3':'rk';
     return`<tr><td><span class="${rc}">${i+1}</span></td>
-      <td><div style="font-size:13px;font-weight:600;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.model}</div>
+      <td><div style="font-size:13px;font-weight:600;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.model}</div>
       <div style="font-size:11px;color:var(--text4)">${r.item||''} · ${r.brand||''}</div></td>
-      <td class="num">${fmt(val)}</td><td class="num">${fmtPct(mp)}</td><td class="num">${fmt(r.orders)}</td></tr>`;
+      <td class="n">${fmt(val)}</td><td class="n">${fP(mp)}</td><td class="n">${fmt(r.orders)}</td></tr>`;
   }
-  document.getElementById('top10SalesTbody').innerHTML=top10s.map((r,i)=>rowHtml(r,i,'sales',false)).join('');
-  document.getElementById('top10MgnTbody').innerHTML=top10m.map((r,i)=>rowHtml(r,i,'margin',true)).join('');
+  document.getElementById('top10SalesTbody').innerHTML=top10S.map((r,i)=>rowHtml(r,i,'sales')).join('');
+  document.getElementById('top10MgnTbody').innerHTML=top10M.map((r,i)=>rowHtml(r,i,'margin')).join('');
 }
 
 window.addEventListener('load',()=>{startLoad();loadAll();});

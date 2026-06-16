@@ -169,13 +169,13 @@ tr:hover td{background:#F8FAFC}
     </a>
     <nav>
       <button class="tab on" onclick="goPage('home',this)">Overview</button>
+      <button class="tab" onclick="goPage('yoy',this)">YoY</button>
+      <button class="tab" onclick="goPage('top10',this)">Top 10</button>
       <button class="tab" onclick="goPage('brand',this)">Brand</button>
       <button class="tab" onclick="goPage('items',this)">Category</button>
       <button class="tab" onclick="goPage('channel',this)">Channel</button>
       <button class="tab" onclick="goPage('trend',this)">Trend</button>
       <button class="tab" onclick="goPage('purchase',this)">Purchase</button>
-      <button class="tab" onclick="goPage('yoy',this)">YoY</button>
-      <button class="tab" onclick="goPage('top10',this)">Top 10</button>
     </nav>
     <div class="hdr-right">
       <span class="fl">Year</span>
@@ -240,11 +240,11 @@ tr:hover td{background:#F8FAFC}
   <div id="page-brand" class="page">
     <div class="kpi-grid" id="kpiBrand"></div>
     <div class="card">
-      <div class="ch"><span class="ct">Sales by Brand (브랜드별 매출)</span></div>
-      <div class="cb h360"><canvas id="brandSalesChart"></canvas></div>
+      <div class="ch"><span class="ct">Sales Top 10 by Brand (브랜드별 매출 TOP10)</span></div>
+      <div class="cb h320"><canvas id="brandSalesChart"></canvas></div>
     </div>
     <div class="card">
-      <div class="ch"><span class="ct">Margin % by Brand (브랜드별 마진율)</span></div>
+      <div class="ch"><span class="ct">Margin % Top 10 by Brand (브랜드별 마진율 TOP10)</span></div>
       <div class="cb h320"><canvas id="brandMgnChart"></canvas></div>
     </div>
     <div class="card">
@@ -380,17 +380,11 @@ tr:hover td{background:#F8FAFC}
 
   <!-- TOP 10 -->
   <div id="page-top10" class="page">
-    <div class="g2" style="margin-bottom:16px">
-      <div class="card mb0">
-        <div class="ch"><span class="ct" id="top10SalesCompTitle">Sales Top 10 — YoY Comparison</span><div class="leg"><span class="li"><span class="ld" style="background:#94A3B8"></span>Prev</span><span class="li"><span class="ld" style="background:var(--blue)"></span>Curr</span></div></div>
-        <div class="cb h300"><canvas id="top10SalesCompChart"></canvas></div>
-      </div>
-      <div class="card mb0">
-        <div class="ch"><span class="ct" id="top10MgnCompTitle">Margin Top 10 — YoY Comparison</span><div class="leg"><span class="li"><span class="ld" style="background:#94A3B8"></span>Prev</span><span class="li"><span class="ld" style="background:var(--green)"></span>Curr</span></div></div>
-        <div class="cb h300"><canvas id="top10MgnCompChart"></canvas></div>
-      </div>
+    <div class="card">
+      <div class="ch"><span class="ct" id="top10SalesCompTitle">Sales Top 10 — YoY Comparison</span><div class="leg"><span class="li"><span class="ld" style="background:#94A3B8"></span>Prev</span><span class="li"><span class="ld" style="background:var(--blue)"></span>Curr</span></div></div>
+      <div class="cb h300"><canvas id="top10SalesCompChart"></canvas></div>
     </div>
-    <div class="g2">
+    <div class="g2" style="margin-bottom:16px">
       <div class="card mb0">
         <div class="ch"><span class="ct" id="top10SalesTitle">Sales Top 10</span></div>
         <div class="cb" style="padding-top:12px">
@@ -399,11 +393,22 @@ tr:hover td{background:#F8FAFC}
         </div>
       </div>
       <div class="card mb0">
-        <div class="ch"><span class="ct" id="top10MgnTitle">Margin Top 10</span></div>
+        <div class="ch"><span class="ct">Sales — Prev vs Curr</span></div>
         <div class="cb" style="padding-top:12px">
-          <table><thead><tr><th>#</th><th>Model</th><th class="n">Margin</th><th class="n">Mgn%</th><th class="n">Qty</th></tr></thead>
-          <tbody id="top10MgnTbody"></tbody></table>
+          <table><thead><tr><th>#</th><th>Model</th><th class="n" id="top10PrevTitle">Prev</th><th class="n" id="top10CurrTitle">Curr</th><th class="n">Growth</th></tr></thead>
+          <tbody id="top10CompTbody"></tbody></table>
         </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ct" id="top10MgnCompTitle">Margin Top 10 — YoY Comparison</span><div class="leg"><span class="li"><span class="ld" style="background:#94A3B8"></span>Prev</span><span class="li"><span class="ld" style="background:var(--green)"></span>Curr</span></div></div>
+      <div class="cb h300"><canvas id="top10MgnCompChart"></canvas></div>
+    </div>
+    <div class="card mb0">
+      <div class="ch"><span class="ct" id="top10MgnTitle">Margin Top 10</span></div>
+      <div class="cb" style="padding-top:12px">
+        <table><thead><tr><th>#</th><th>Model</th><th class="n">Margin</th><th class="n">Mgn%</th><th class="n">Qty</th></tr></thead>
+        <tbody id="top10MgnTbody"></tbody></table>
       </div>
     </div>
   </div>
@@ -623,7 +628,7 @@ function renderHome(){
         datalabels:{display:true,color:'#D97706',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>v.toFixed(1)+'%',clamp:true}}
     ]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:36}},
-      plugins:{legend:{position:'top',align:'end',labels:{color:'#64748B',font:{size:12,family:'Inter,sans-serif'},boxWidth:10,usePointStyle:true,padding:16}},datalabels:{}},
+      plugins:{legend:{display:false},datalabels:{}},
       scales:{x:bX,y:{...bY,grid:{display:false},position:'left'},y2:{position:'right',grid:{display:false},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>v.toFixed(1)+'%'}}}}
   });
 }
@@ -632,21 +637,22 @@ function renderHome(){
 function renderBrand(){
   if(!RAW.length)return;
   const rows=fr(RAW),data=addABC(gBy(rows,'brand'));
+  const top10=data.slice(0,10);
   bKpi(rows,'kpiBrand');
 
-  function hBar(id,vals,labs,isP){
+  function vBarTop10(id,vals,labs,isP){
     dc(id);
     charts[id]=new Chart(document.getElementById(id),{
       type:'bar',
-      data:{labels:labs,datasets:[{data:vals,backgroundColor:C.map(c=>c+'1A'),borderColor:C,borderWidth:1.5,
-        datalabels:isP?{...dlHP('#334155')}:{...dlH('#334155')}}]},
-      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',layout:{padding:{right:100}},
+      data:{labels:labs,datasets:[{data:vals,backgroundColor:C.slice(0,vals.length).map(c=>c+'22'),borderColor:C.slice(0,vals.length),borderWidth:1.5,
+        datalabels:{display:true,color:'#334155',font:{size:11,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>isP?v.toFixed(1)+'%':fS(v),clamp:true}}]},
+      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28}},
         plugins:{legend:{display:false},datalabels:{}},
-        scales:{x:{...bX,grid:{display:false}},y:bYn}}
+        scales:{x:bX,y:{...bY,grid:{display:false}}}}
     });
   }
-  hBar('brandSalesChart',data.map(r=>r.sales),data.map(r=>r.key),false);
-  hBar('brandMgnChart',data.map(r=>r.sales>0?r.margin/r.sales*100:0),data.map(r=>r.key),true);
+  vBarTop10('brandSalesChart',top10.map(r=>r.sales),top10.map(r=>r.key),false);
+  vBarTop10('brandMgnChart',top10.map(r=>r.sales>0?r.margin/r.sales*100:0),top10.map(r=>r.key),true);
 
   document.getElementById('brandTbody').innerHTML=data.map(r=>{
     const mp=r.sales>0?r.margin/r.sales:0,ac=r.abc==='A'?'abc-a':r.abc==='B'?'abc-b':'abc-c';
@@ -871,8 +877,9 @@ function renderTop10(){
   document.getElementById('top10MgnCompTitle').textContent=`Margin Top 10 — ${yr-1} vs ${yr}`;
   document.getElementById('top10SalesTitle').textContent=`Sales Top 10 — ${period}`;
   document.getElementById('top10MgnTitle').textContent=`Margin Top 10 — ${period}`;
+  document.getElementById('top10PrevTitle').textContent=`${yr-1}년`;
+  document.getElementById('top10CurrTitle').textContent=`${yr}년`;
 
-  // 모델별 집계
   function buildMap(rws){
     const m={};
     rws.forEach(r=>{const k=r.model||'기타';if(!m[k])m[k]={model:k,item:r.item,brand:r.brand,sales:0,margin:0,orders:0};m[k].sales+=r.price;m[k].margin+=r.margin;if(r.type==='메인')m[k].orders+=1;});
@@ -880,7 +887,7 @@ function renderTop10(){
   }
   const currMap=buildMap(rows),prevMap=buildMap(prevRows);
   const allCurr=Object.values(currMap);
-  const top10S=allCurr.sort((a,b)=>b.sales-a.sales).slice(0,10);
+  const top10S=[...allCurr].sort((a,b)=>b.sales-a.sales).slice(0,10);
   const top10M=[...allCurr].sort((a,b)=>b.margin-a.margin).slice(0,10);
 
   // YoY 비교 차트
@@ -904,6 +911,17 @@ function renderTop10(){
   }
   yoyBarChart('top10SalesCompChart',top10S,'sales','#2563EB');
   yoyBarChart('top10MgnCompChart',top10M,'margin','#059669');
+
+  // Sales 비교 테이블
+  document.getElementById('top10CompTbody').innerHTML=top10S.map((r,i)=>{
+    const pv=(prevMap[r.model]||{}).sales||0;
+    const rc=i===0?'rk r1':i===1?'rk r2':i===2?'rk r3':'rk';
+    return`<tr><td><span class="${rc}">${i+1}</span></td>
+      <td style="font-size:13px;font-weight:600;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.model}</td>
+      <td class="n">${pv?fmt(pv):'—'}</td>
+      <td class="n">${fmt(r.sales)}</td>
+      <td class="n">${pv?yd(r.sales,pv):'—'}</td></tr>`;
+  }).join('');
 
   function rowHtml(r,i,valKey){
     const val=r[valKey],mp=r.sales>0?r.margin/r.sales:0;

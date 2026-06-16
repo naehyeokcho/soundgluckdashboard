@@ -572,9 +572,9 @@ const baseYpct={...baseY,ticks:{...baseY.ticks,callback:v=>v+'%'}};
 const noGridY={grid:{display:false},border:{display:false},ticks:{color:'#334155',font:{size:13,weight:'600',family:"'Inter',sans-serif"}}};
 
 // datalabels: inside bar if bar is wide, outside if narrow
-function dlBar(color='#334155'){return{display:true,color,font:{size:12,weight:'700',family:"'Inter',sans-serif"},formatter:v=>v>0?fmtS(v):'',anchor:'end',align:ctx=>{const max=Math.max(...ctx.chart.data.datasets[ctx.datasetIndex].data);return ctx.parsed.x>max*0.4?'start':'end';},clamp:true};}
+function dlBar(color='#334155'){return{display:true,color,font:{size:12,weight:'700',family:"'Inter',sans-serif"},formatter:v=>v>0?fmtS(v):'',anchor:'end',align:'end',clamp:true,offset:4};}
 function dlBarV(color='#334155'){return{display:true,color,font:{size:11,weight:'700',family:"'Inter',sans-serif"},formatter:v=>v>0?fmtS(v):'',anchor:'end',align:'top',clamp:true};}
-function dlPct(color='#334155'){return{display:true,color,font:{size:12,weight:'700',family:"'Inter',sans-serif"},formatter:v=>v>0?v.toFixed(1)+'%':'',anchor:'end',align:ctx=>{const max=Math.max(...ctx.chart.data.datasets[ctx.datasetIndex].data);return ctx.parsed.x>max*0.4?'start':'end';},clamp:true};}
+function dlPct(color='#334155'){return{display:true,color,font:{size:12,weight:'700',family:"'Inter',sans-serif"},formatter:v=>v>0?v.toFixed(1)+'%':'',anchor:'end',align:'end',clamp:true,offset:4};}
 
 /* AGGREGATE */
 function gByYm(rows){

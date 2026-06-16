@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOUNDGLUCK Dashboard v2.1</title>
+<title>SOUNDGLUCK Dashboard v2.2</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <style>
@@ -38,7 +38,7 @@
   --t:0.15s ease;
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
 
 /* ── LOADING ── */
 #loading{
@@ -319,7 +319,7 @@ tr:hover td{background:rgba(91,142,240,0.03)}
       <div class="sb-logo">🎵</div>
       <div>
         <div class="sb-brand">SOUNDGLUCK</div>
-        <div class="sb-version">Dashboard v2.1</div>
+        <div class="sb-version">Dashboard v2.2</div>
       </div>
     </div>
 
@@ -360,17 +360,24 @@ tr:hover td{background:rgba(91,142,240,0.03)}
       <div class="sb-hist-title">버전 히스토리</div>
       <div class="hist-item">
         <div class="hist-ver">
+          <span class="hist-badge major">v2.2</span>
+          <span class="hist-date">2026-06-16</span>
+        </div>
+        <div class="hist-desc">채널 정규화 · 홈 채널테이블 · 전월동기/전년동월 비교 · YoY 동기간 · 폰트 확대</div>
+      </div>
+      <div class="hist-item">
+        <div class="hist-ver">
           <span class="hist-badge major">v2.0</span>
           <span class="hist-date">2026-06-15</span>
         </div>
-        <div class="hist-desc">사이드바 레이아웃 · 브랜드/품목 분석 · ABC분석 · YoY · 매입현황 · 연도/월 필터</div>
+        <div class="hist-desc">사이드바 · 브랜드/품목 ABC분석 · YoY · 매입현황</div>
       </div>
       <div class="hist-item">
         <div class="hist-ver">
           <span class="hist-badge minor">v1.0</span>
           <span class="hist-date">2026-06-15</span>
         </div>
-        <div class="hist-desc">최초 배포 · 홈/월별/채널/품목/TOP10</div>
+        <div class="hist-desc">최초 배포</div>
       </div>
     </div>
   </aside>
@@ -421,6 +428,15 @@ tr:hover td{background:rgba(91,142,240,0.03)}
             </div>
           </div>
           <div class="chart-wrap h280"><canvas id="dailyChart"></canvas></div>
+        </div>
+        <div class="table-card">
+          <div class="table-hdr"><span class="table-title">당월 채널별 매출</span></div>
+          <div class="table-wrap">
+            <table><thead><tr>
+              <th>채널</th><th class="num">매출</th><th class="num">마진</th>
+              <th class="num">마진율</th><th class="num">주문</th><th class="num">비중</th>
+            </tr></thead><tbody id="homeChannelTable"></tbody></table>
+          </div>
         </div>
       </div>
 
@@ -771,7 +787,7 @@ function showErr(msg) {
 ══════════════════════════════════ */
 const fmt  = n => Math.round(n).toLocaleString('ko-KR');
 const fmtS = n => {
-  if (Math.abs(n) >= 1e8) return (n/1e8).toFixed(1) + '억';
+  if (Math.abs(n) >= 1e8) return (n/1e8).toFixed(2) + '억';
   if (Math.abs(n) >= 1e4) return Math.round(n/1e4) + '만';
   return fmt(n);
 };
@@ -784,6 +800,21 @@ function deltaHtml(curr, prev, label='vs 전월') {
   const cls = +d >= 0 ? 'up' : 'down';
   const arrow = +d >= 0 ? '▲' : '▼';
   return `<div class="kpi-delta ${cls}">${arrow} ${Math.abs(d)}% ${label}</div>`;
+}
+
+function deltaHtml2(curr, prev1, label1, prev2, label2) {
+  let html = '';
+  if (prev1 && prev1 !== 0) {
+    const d1 = ((curr - prev1) / prev1 * 100).toFixed(1);
+    const cls1 = +d1 >= 0 ? 'up' : 'down';
+    html += `<div class="kpi-delta ${cls1}">${+d1>=0?'▲':'▼'} ${Math.abs(d1)}% ${label1}</div>`;
+  }
+  if (prev2 && prev2 !== 0) {
+    const d2 = ((curr - prev2) / prev2 * 100).toFixed(1);
+    const cls2 = +d2 >= 0 ? 'up' : 'down';
+    html += `<div class="kpi-delta ${cls2}">${+d2>=0?'▲':'▼'} ${Math.abs(d2)}% ${label2}</div>`;
+  }
+  return html;
 }
 
 function yoyDelta(curr, prev) {
@@ -831,11 +862,13 @@ function labelPlugin(fmt_fn, color='#A8B0C8') {
 function groupBy(rows, key) {
   const map = {};
   rows.forEach(r => {
-    const k = r[key] || '미분류';
+    const rawCh = r[key];
+    const k = key === 'channel' ? normalizeChannel(rawCh) : (rawCh || '미분류');
+    if (!k) return;
     if (!map[k]) map[k] = { key: k, sales: 0, margin: 0, orders: 0 };
     map[k].sales  += r.price;
     map[k].margin += r.margin;
-    map[k].orders += 1;
+    if (r.type === '메인') map[k].orders += 1;
   });
   return Object.values(map).sort((a,b) => b.sales - a.sales);
 }
@@ -904,37 +937,69 @@ function renderHome() {
   const yr = year || getThisYear();
   const mo = month || getThisMonth();
 
-  const ym   = (yr % 100) * 100 + mo;
-  const pmYm = mo === 1 ? ((yr-1) % 100)*100+12 : (yr % 100)*100+(mo-1);
+  const ym    = (yr % 100) * 100 + mo;
+  const pmYm  = mo === 1 ? ((yr-1) % 100)*100+12 : (yr % 100)*100+(mo-1);
+  const yoyYm = ((yr-1) % 100) * 100 + mo; // 전년 동월
+
+  // 오늘 날짜 (일별 동기 비교용)
+  const today = new Date();
+  const todayDay = (yr === getThisYear() && mo === getThisMonth()) ? today.getDate() : 31;
+  const todayStr = `${yr}-${String(mo).padStart(2,'0')}-${String(todayDay).padStart(2,'0')}`;
 
   const mtdRows  = RAW.filter(r => Number(r.yearMonth) === ym);
   const prevRows = RAW.filter(r => Number(r.yearMonth) === pmYm);
+  const yoyRows  = RAW.filter(r => Number(r.yearMonth) === yoyYm);
   const ytdRows  = RAW.filter(r => Number(r.year) === yr);
+
+  // 전월 동기간 (전월 1일~오늘일수 만큼)
+  const prevSamePeriod = prevRows.filter(r => {
+    if (!r.date) return false;
+    const d = parseInt(r.date.split('-')[2]);
+    return d <= todayDay;
+  });
+  // 전년 동월 동기간
+  const yoySamePeriod = yoyRows.filter(r => {
+    if (!r.date) return false;
+    const d = parseInt(r.date.split('-')[2]);
+    return d <= todayDay;
+  });
 
   const mS = mtdRows.reduce((a,r)=>a+r.price,0);
   const mM = mtdRows.reduce((a,r)=>a+r.margin,0);
   const mO = mtdRows.filter(r=>r.type==='메인').length;
-  const pS = prevRows.reduce((a,r)=>a+r.price,0);
-  const pM = prevRows.reduce((a,r)=>a+r.margin,0);
-  const pO = prevRows.filter(r=>r.type==='메인').length;
-  const yS = ytdRows.reduce((a,r)=>a+r.price,0);
-  const yM = ytdRows.reduce((a,r)=>a+r.margin,0);
-  const yO = ytdRows.filter(r=>r.type==='메인').length;
-  const mp  = mS > 0 ? mM/mS : 0;
-  const ymp = yS > 0 ? yM/yS : 0;
+
+  const pS = prevSamePeriod.reduce((a,r)=>a+r.price,0);
+  const pM = prevSamePeriod.reduce((a,r)=>a+r.margin,0);
+  const pO = prevSamePeriod.filter(r=>r.type==='메인').length;
+
+  const yS = yoySamePeriod.reduce((a,r)=>a+r.price,0);
+  const yM = yoySamePeriod.reduce((a,r)=>a+r.margin,0);
+  const yO = yoySamePeriod.filter(r=>r.type==='메인').length;
+
+  const ytdS = ytdRows.reduce((a,r)=>a+r.price,0);
+  const ytdM = ytdRows.reduce((a,r)=>a+r.margin,0);
+  const ytdO = ytdRows.filter(r=>r.type==='메인').length;
+  const mp   = mS > 0 ? mM/mS : 0;
+  const ymp  = ytdS > 0 ? ytdM/ytdS : 0;
 
   document.getElementById('homeLabel').textContent = `${yr}년 ${mo}월 실적`;
 
   document.getElementById('kpiMtd').innerHTML = `
     <div class="kpi-card"><div class="kpi-label">당월 매출</div>
       <div class="kpi-val">${fmtS(mS)}원</div>
-      <div class="kpi-sub">${fmt(mS)}원</div>${deltaHtml(mS,pS)}</div>
+      <div class="kpi-sub">${fmt(mS)}원</div>
+      ${deltaHtml2(mS, yS, 'vs 전년동월', pS, 'vs 전월동기')}
+    </div>
     <div class="kpi-card g"><div class="kpi-label">당월 마진</div>
       <div class="kpi-val">${fmtS(mM)}원</div>
-      <div class="kpi-sub">마진율 ${fmtPct(mp)}</div>${deltaHtml(mM,pM)}</div>
+      <div class="kpi-sub">마진율 ${fmtPct(mp)}</div>
+      ${deltaHtml2(mM, yM, 'vs 전년동월', pM, 'vs 전월동기')}
+    </div>
     <div class="kpi-card o"><div class="kpi-label">당월 주문</div>
       <div class="kpi-val">${mO}건</div>
-      <div class="kpi-sub">건당 ${fmtS(mO?mS/mO:0)}원</div>${deltaHtml(mO,pO)}</div>
+      <div class="kpi-sub">건당 ${fmtS(mO?mS/mO:0)}원</div>
+      ${deltaHtml2(mO, yO, 'vs 전년동월', pO, 'vs 전월동기')}
+    </div>
     <div class="kpi-card p"><div class="kpi-label">마진율</div>
       <div class="kpi-val">${fmtPct(mp)}</div>
       <div class="kpi-sub">&nbsp;</div></div>
@@ -942,20 +1007,67 @@ function renderHome() {
 
   document.getElementById('kpiYtd').innerHTML = `
     <div class="kpi-card"><div class="kpi-label">${yr}년 누계 매출</div>
-      <div class="kpi-val">${fmtS(yS)}원</div>
-      <div class="kpi-sub">${fmt(yS)}원</div></div>
+      <div class="kpi-val">${fmtS(ytdS)}원</div>
+      <div class="kpi-sub">${fmt(ytdS)}원</div></div>
     <div class="kpi-card g"><div class="kpi-label">${yr}년 누계 마진</div>
-      <div class="kpi-val">${fmtS(yM)}원</div>
+      <div class="kpi-val">${fmtS(ytdM)}원</div>
       <div class="kpi-sub">마진율 ${fmtPct(ymp)}</div></div>
     <div class="kpi-card o"><div class="kpi-label">${yr}년 총 주문</div>
-      <div class="kpi-val">${yO}건</div>
-      <div class="kpi-sub">월평균 ${Math.round(yO/mo)}건</div></div>
+      <div class="kpi-val">${ytdO}건</div>
+      <div class="kpi-sub">월평균 ${Math.round(ytdO/mo)}건</div></div>
     <div class="kpi-card c"><div class="kpi-label">평균 주문단가</div>
-      <div class="kpi-val">${fmtS(yO?yS/yO:0)}원</div>
+      <div class="kpi-val">${fmtS(ytdO?ytdS/ytdO:0)}원</div>
       <div class="kpi-sub">&nbsp;</div></div>
   `;
 
+  // 채널별 당월 매출 테이블
+  renderHomeChannelTable(mtdRows, yr, mo);
   renderDailyChart(ym);
+}
+
+// 채널 정규화 (S2B통합, 불필요 채널 제외)
+const CHANNEL_EXCLUDE = ['서비스','반입','매입'];
+function normalizeChannel(ch) {
+  if (!ch) return null;
+  const c = ch.trim();
+  if (CHANNEL_EXCLUDE.some(e => c.includes(e))) return null;
+  if (c.includes('S2B') || c.toLowerCase().includes('s2b')) return 'S2B';
+  return c;
+}
+
+function renderHomeChannelTable(rows, yr, mo) {
+  const el = document.getElementById('homeChannelTable');
+  if (!el) return;
+  const map = {};
+  rows.forEach(r => {
+    const ch = normalizeChannel(r.channel);
+    if (!ch) return;
+    if (!map[ch]) map[ch] = { sales:0, margin:0, orders:0 };
+    map[ch].sales  += r.price;
+    map[ch].margin += r.margin;
+    if (r.type === '메인') map[ch].orders += 1;
+  });
+  const data = Object.entries(map).sort((a,b)=>b[1].sales-a[1].sales);
+  const total = data.reduce((s,[,v])=>s+v.sales,0);
+  el.innerHTML = data.map(([ch, v]) => {
+    const mp = v.sales > 0 ? v.margin/v.sales : 0;
+    const share = total > 0 ? v.sales/total : 0;
+    return `<tr>
+      <td><span class="badge badge-blue">${ch}</span></td>
+      <td class="num">${fmt(v.sales)}</td>
+      <td class="num">${fmt(v.margin)}</td>
+      <td class="num">${fmtPct(mp)}</td>
+      <td class="num">${v.orders}건</td>
+      <td class="num">${(share*100).toFixed(1)}%</td>
+    </tr>`;
+  }).join('') + `<tr style="border-top:2px solid var(--border);font-weight:700">
+    <td>합계</td>
+    <td class="num">${fmt(total)}</td>
+    <td class="num">${fmt(rows.reduce((a,r)=>a+r.margin,0))}</td>
+    <td class="num">—</td>
+    <td class="num">${rows.filter(r=>r.type==='메인').length}건</td>
+    <td class="num">100%</td>
+  </tr>`;
 }
 
 function renderDailyChart(ym) {
@@ -1441,34 +1553,47 @@ function renderPurchase() {
 ══════════════════════════════════ */
 function renderYoy() {
   if (!RAW.length) return;
+  const {year} = getFilter();
+  const curYear = year || getThisYear();
+  const prevYear = curYear - 1;
+
+  // 현재 연도에서 데이터 있는 최대 월 파악
+  const curMonths = [...new Set(RAW.filter(r=>Number(r.year)===curYear).map(r=>Number(r.month)))].filter(Boolean);
+  const maxMonth = curMonths.length > 0 ? Math.max(...curMonths) : 12;
+
   const months = [1,2,3,4,5,6,7,8,9,10,11,12];
-  const d25 = {}, d26 = {};
-  months.forEach(m => { d25[m]={sales:0,margin:0,orders:0}; d26[m]={sales:0,margin:0,orders:0}; });
-  RAW.forEach(r => {
-    if (Number(r.year)===2025 && Number(r.month)>=1&&Number(r.month)<=12) {
-      d25[r.month].sales+=r.price; d25[r.month].margin+=r.margin; d25[r.month].orders+=1;
-    }
-    if (Number(r.year)===2026 && Number(r.month)>=1&&Number(r.month)<=12) {
-      d26[r.month].sales+=r.price; d26[r.month].margin+=r.margin; d26[r.month].orders+=1;
-    }
+  const dCur = {}, dPrev = {};
+  months.forEach(m => {
+    dCur[m]  = {sales:0, margin:0, orders:0};
+    dPrev[m] = {sales:0, margin:0, orders:0};
   });
 
-  const tot25 = { sales:Object.values(d25).reduce((a,r)=>a+r.sales,0), margin:Object.values(d25).reduce((a,r)=>a+r.margin,0) };
-  const tot26 = { sales:Object.values(d26).reduce((a,r)=>a+r.sales,0), margin:Object.values(d26).reduce((a,r)=>a+r.margin,0) };
-  const growthS = tot25.sales>0?((tot26.sales-tot25.sales)/tot25.sales*100).toFixed(1):'-';
-  const mp25 = tot25.sales>0?tot25.margin/tot25.sales:0;
-  const mp26 = tot26.sales>0?tot26.margin/tot26.sales:0;
+  RAW.forEach(r => {
+    const y = Number(r.year), m = Number(r.month);
+    if (!y || !m) return;
+    if (y === curYear)  { dCur[m].sales+=r.price;  dCur[m].margin+=r.margin;  if(r.type==='메인') dCur[m].orders+=1; }
+    if (y === prevYear) { dPrev[m].sales+=r.price; dPrev[m].margin+=r.margin; if(r.type==='메인') dPrev[m].orders+=1; }
+  });
+
+  // 동기간 비교 (현재연도 최대월까지만)
+  const samePrevSales  = months.slice(0,maxMonth).reduce((a,m)=>a+dPrev[m].sales,0);
+  const samePrevMargin = months.slice(0,maxMonth).reduce((a,m)=>a+dPrev[m].margin,0);
+  const curSales  = months.slice(0,maxMonth).reduce((a,m)=>a+dCur[m].sales,0);
+  const curMargin = months.slice(0,maxMonth).reduce((a,m)=>a+dCur[m].margin,0);
+  const growthS = samePrevSales>0?((curSales-samePrevSales)/samePrevSales*100).toFixed(1):'-';
+  const mp25 = samePrevSales>0?samePrevMargin/samePrevSales:0;
+  const mp26 = curSales>0?curMargin/curSales:0;
 
   document.getElementById('kpiYoy').innerHTML = `
-    <div class="kpi-card"><div class="kpi-label">2026 누계 매출</div>
-      <div class="kpi-val">${fmtS(tot26.sales)}원</div>
-      <div class="kpi-sub">${yoyDelta(tot26.sales,tot25.sales)} vs 2025</div></div>
-    <div class="kpi-card g"><div class="kpi-label">2026 누계 마진</div>
-      <div class="kpi-val">${fmtS(tot26.margin)}원</div>
+    <div class="kpi-card"><div class="kpi-label">${curYear} 누계 매출 (1~${maxMonth}월)</div>
+      <div class="kpi-val">${fmtS(curSales)}원</div>
+      <div class="kpi-sub">${yoyDelta(curSales,samePrevSales)} vs ${prevYear} 동기</div></div>
+    <div class="kpi-card g"><div class="kpi-label">${curYear} 누계 마진</div>
+      <div class="kpi-val">${fmtS(curMargin)}원</div>
       <div class="kpi-sub">마진율 ${fmtPct(mp26)}</div></div>
-    <div class="kpi-card o"><div class="kpi-label">매출 성장률 (YoY)</div>
+    <div class="kpi-card o"><div class="kpi-label">동기간 성장률</div>
       <div class="kpi-val">${growthS}%</div>
-      <div class="kpi-sub">2025 대비</div></div>
+      <div class="kpi-sub">${prevYear} 1~${maxMonth}월 대비</div></div>
     <div class="kpi-card p"><div class="kpi-label">마진율 변화</div>
       <div class="kpi-val">${((mp26-mp25)*100).toFixed(1)}%p</div>
       <div class="kpi-sub">${fmtPct(mp25)} → ${fmtPct(mp26)}</div></div>
@@ -1481,10 +1606,10 @@ function renderYoy() {
     data:{
       labels,
       datasets:[
-        {label:'2025',data:months.map(m=>d25[m].sales),backgroundColor:'rgba(90,98,130,0.4)',borderColor:'#5A6282',borderWidth:1,
-          datalabels:{display:ctx=>d25[months[ctx.dataIndex]].sales>0,color:'#8890AA',font:{size:9,family:"'SF Mono',monospace"},anchor:'end',align:'top',formatter:v=>fmtS(v)}},
-        {label:'2026',data:months.map(m=>d26[m].sales),backgroundColor:'rgba(91,142,240,0.55)',borderColor:'#5B8EF0',borderWidth:1,
-          datalabels:{display:ctx=>d26[months[ctx.dataIndex]].sales>0,color:'#8BB4F8',font:{size:9,family:"'SF Mono',monospace"},anchor:'end',align:'top',formatter:v=>fmtS(v)}}
+        {label:`${prevYear}`,data:months.map(m=>dPrev[m].sales),backgroundColor:'rgba(90,98,130,0.4)',borderColor:'#5A6282',borderWidth:1,
+          datalabels:{display:ctx=>dPrev[months[ctx.dataIndex]].sales>0,color:'#8890AA',font:{size:9,family:"'SF Mono',monospace"},anchor:'end',align:'top',formatter:v=>fmtS(v)}},
+        {label:`${curYear}`,data:months.map(m=>dCur[m].sales),backgroundColor:'rgba(91,142,240,0.55)',borderColor:'#5B8EF0',borderWidth:1,
+          datalabels:{display:ctx=>dCur[months[ctx.dataIndex]].sales>0,color:'#8BB4F8',font:{size:9,family:"'SF Mono',monospace"},anchor:'end',align:'top',formatter:v=>fmtS(v)}}
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,
@@ -1498,10 +1623,10 @@ function renderYoy() {
     data:{
       labels,
       datasets:[
-        {label:'2025 마진율',data:months.map(m=>d25[m].sales>0?d25[m].margin/d25[m].sales*100:null),
+        {label:`${prevYear} 마진율`,data:months.map(m=>dPrev[m].sales>0?dPrev[m].margin/dPrev[m].sales*100:null),
           borderColor:'#5A6282',borderWidth:2,pointRadius:3,tension:0.3,fill:false,spanGaps:true,
           datalabels:{display:false}},
-        {label:'2026 마진율',data:months.map(m=>d26[m].sales>0?d26[m].margin/d26[m].sales*100:null),
+        {label:`${curYear} 마진율`,data:months.map(m=>dCur[m].sales>0?dCur[m].margin/dCur[m].sales*100:null),
           borderColor:'#3FCF8E',borderWidth:2,pointRadius:3,tension:0.3,fill:false,spanGaps:true,
           datalabels:{display:ctx=>ctx.dataset.data[ctx.dataIndex]!=null,
             color:'#3FCF8E',font:{size:9,family:"'SF Mono',monospace"},anchor:'end',align:'top',formatter:v=>v?v.toFixed(1)+'%':''}}
@@ -1513,17 +1638,17 @@ function renderYoy() {
   });
 
   document.getElementById('yoyTbody').innerHTML = months.map(m=>{
-    const s25=d25[m].sales, s26=d26[m].sales;
-    const mp25_=s25>0?d25[m].margin/s25:0, mp26_=s26>0?d26[m].margin/s26:0;
-    const diff = s26-s25;
+    const sPrev=dPrev[m].sales, sCur=dCur[m].sales;
+    const mpPrev=sPrev>0?dPrev[m].margin/sPrev:0, mpCur=sCur>0?dCur[m].margin/sCur:0;
+    const diff = sCur-sPrev;
     return `<tr>
       <td>${m}월</td>
-      <td class="num">${s25?fmt(s25):'—'}</td>
-      <td class="num">${s26?fmt(s26):'—'}</td>
-      <td class="num ${diff>=0?'yoy-up':'yoy-dn'}">${s25&&s26?(diff>=0?'+':'')+fmt(diff):'—'}</td>
-      <td class="num">${s25?yoyDelta(s26,s25):'—'}</td>
-      <td class="num">${s25?fmtPct(mp25_):'—'}</td>
-      <td class="num">${s26?fmtPct(mp26_):'—'}</td>
+      <td class="num">${sPrev?fmt(sPrev):'—'}</td>
+      <td class="num">${sCur?fmt(sCur):'—'}</td>
+      <td class="num ${diff>=0?'yoy-up':'yoy-dn'}">${sPrev&&sCur?(diff>=0?'+':'')+fmt(diff):'—'}</td>
+      <td class="num">${sPrev?yoyDelta(sCur,sPrev):'—'}</td>
+      <td class="num">${sPrev?fmtPct(mpPrev):'—'}</td>
+      <td class="num">${sCur?fmtPct(mpCur):'—'}</td>
     </tr>`;
   }).join('');
 }

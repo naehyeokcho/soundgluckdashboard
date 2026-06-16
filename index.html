@@ -156,7 +156,7 @@ tr:hover td{background:#F8FAFC}
 <div id="loading">
   <div class="ld-mark"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
   <div class="ld-name">SOUNDGLUCK</div>
-  <div class="ld-num" id="ldN">3</div>
+  <div class="ld-num" id="ldN" style="font-size:32px;color:#64748B">Loading</div>
   <div class="ld-bar"><div class="ld-fill" id="ldB"></div></div>
   <div class="ld-msg" id="ldM">Connecting...</div>
 </div>
@@ -428,11 +428,27 @@ function nCh(ch){if(!ch)return null;const c=ch.trim();if(CH_EX.some(e=>c.include
 
 /* LOADING */
 function startLoad(){
-  let n=3;const el=document.getElementById('ldN'),b=document.getElementById('ldB'),m=document.getElementById('ldM');
-  const ms=['Connecting...','Loading data...','Rendering...','Done!'];let mi=0;
-  const iv=setInterval(()=>{if(n<=0){clearInterval(iv);return;}n--;el.textContent=n||'✓';b.style.width=((3-n)/3*100)+'%';if(mi<ms.length)m.textContent=ms[mi++];},800);
+  let n=0;
+  const el=document.getElementById('ldN'),b=document.getElementById('ldB'),m=document.getElementById('ldM');
+  const msgs=['Connecting...','Loading data...','Processing...','Almost there...'];
+  el.textContent='...';
+  window._loadInterval=setInterval(()=>{
+    n++;
+    b.style.width=Math.min(n*3,90)+'%'; // 최대 90%까지만 (완료시 100%)
+    const mi=Math.floor(n/5);
+    if(mi<msgs.length)m.textContent=msgs[mi];
+  },300);
 }
-function hideLoad(){setTimeout(()=>{const e=document.getElementById('loading');e.style.opacity='0';e.style.transition='opacity .4s';setTimeout(()=>e.style.display='none',400);},500);}
+function hideLoad(){
+  clearInterval(window._loadInterval);
+  const b=document.getElementById('ldB'),el=document.getElementById('ldN');
+  b.style.width='100%';el.textContent='✓';
+  setTimeout(()=>{
+    const e=document.getElementById('loading');
+    e.style.opacity='0';e.style.transition='opacity .4s';
+    setTimeout(()=>e.style.display='none',400);
+  },300);
+}
 
 /* NAV */
 const PR={home:renderHome,brand:renderBrand,items:renderItems,channel:renderChannel,trend:renderTrend,purchase:renderPurchase,yoy:renderYoy,top10:renderTop10};
@@ -734,8 +750,8 @@ function renderTrend(){
     document.getElementById(lid).innerHTML=top.map((k,i)=>`<span class="li"><span class="ld" style="background:${C[i]};border-radius:2px"></span>${k}</span>`).join('');
     dc(cid);
     charts[cid]=new Chart(document.getElementById(cid),{
-      type:'line',
-      data:{labels,datasets:top.map((k,i)=>({label:k,data:mn.map(ym=>rows.filter(r=>Number(r.yearMonth)===ym.ym&&getK(r)===k).reduce((a,r)=>a+r.price,0)),borderColor:C[i],borderWidth:2,pointRadius:3,tension:.3,fill:false,datalabels:{display:false}}))},
+      type:'bar',
+      data:{labels,datasets:top.map((k,i)=>({label:k,data:mn.map(ym=>rows.filter(r=>Number(r.yearMonth)===ym.ym&&getK(r)===k).reduce((a,r)=>a+r.price,0)),backgroundColor:C[i]+'22',borderColor:C[i],borderWidth:1.5,datalabels:{display:false}}))},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},datalabels:{}},scales:{x:bX,y:{...bY,grid:{display:false}}}}
     });
   }

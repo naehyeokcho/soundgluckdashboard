@@ -582,8 +582,8 @@ function renderHome(){
   const mDailyAvg = td > 0 ? Math.round(mS / td) : 0;
   document.getElementById('kpiMtd').innerHTML=`
     <div class="kpi bl"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Sales</div><div class="kv">${fS(mS)}</div><div class="ks">${fmt(mS)}원</div>${dd(mS,yS,'vs YoY',pS,'vs MoM')}</div>
-    <div class="kpi gr"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Margin</div><div class="kv">${fmt(mM)}원</div><div class="ks">${fP(mp)}</div>${dd(mM,yM,'vs YoY',pM,'vs MoM')}</div>
-    <div class="kpi am"><div class="kpi-deco"></div><div class="kl">일평균 매출 (${td}일 기준)</div><div class="kv">${fS(mDailyAvg)}</div><div class="ks">${fmt(mDailyAvg)}원</div></div>
+    <div class="kpi gr"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Margin</div><div class="kv">${fS(mM)}</div><div class="ks">${fmt(mM)}원 / ${fP(mp)}</div>${dd(mM,yM,'vs YoY',pM,'vs MoM')}</div>
+    <div class="kpi am"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 일평균 매출</div><div class="kv">${fS(mDailyAvg)}</div><div class="ks">${fmt(mDailyAvg)}원 / ${td}일 기준</div></div>
     <div class="kpi pu"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Orders</div><div class="kv">${fmt(mO)}건</div><div class="ks">Avg. ${fS(mO?mS/mO:0)}원</div></div>
   `;
   document.getElementById('kpiYtd').innerHTML=`

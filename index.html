@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOUNDGLUCK Dashboard v3.2</title>
+<title>SOUNDGLUCK Dashboard v3.3</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
@@ -190,9 +190,10 @@ tr:hover td{background:#F8FAFC}
       </select>
       <span class="upd" id="upd">—</span>
       <div class="ver-wrap">
-        <button class="ver-btn" onclick="document.getElementById('vp').classList.toggle('open')">v3.2</button>
+        <button class="ver-btn" onclick="document.getElementById('vp').classList.toggle('open')">v3.3</button>
         <div class="ver-panel" id="vp">
-          <div class="vr"><div class="vt"><span class="vbg M">v3.2</span><span class="vd">2026-06-16</span></div><div class="vdesc">Outbound date daily chart · Layout overhaul · Top nav · YoY chart in Top10</div></div>
+          <div class="vr"><div class="vt"><span class="vbg M">v3.3</span><span class="vd">2026-06-19</span></div><div class="vdesc">KPI 개편: 풀마진+마진율 / 일평균매출 / 오더건수 · 월별 일평균 YoY 차트 추가</div></div>
+          <div class="vr"><div class="vt"><span class="vbg m">v3.2</span><span class="vd">2026-06-16</span></div><div class="vdesc">Outbound date daily chart · Layout overhaul · Top nav · YoY chart in Top10</div></div>
           <div class="vr"><div class="vt"><span class="vbg m">v3.1</span><span class="vd">2026-06-16</span></div><div class="vdesc">White theme · Inter font · Filled KPI · No grid lines</div></div>
           <div class="vr"><div class="vt"><span class="vbg m">v2.2</span><span class="vd">2026-06-16</span></div><div class="vdesc">Channel normalization · YoY same-period</div></div>
           <div class="vr"><div class="vt"><span class="vbg m">v1.0</span><span class="vd">2026-06-15</span></div><div class="vdesc">Initial release</div></div>
@@ -233,6 +234,13 @@ tr:hover td{background:#F8FAFC}
         </div>
       </div>
       <div class="cb h300"><canvas id="monthlyChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ch">
+        <span class="ct">Daily Avg Sales YoY (월별 일평균 매출)</span>
+        <div class="leg" id="dailyAvgLeg"></div>
+      </div>
+      <div class="cb h280"><canvas id="dailyAvgYoyChart"></canvas></div>
     </div>
   </div>
 
@@ -571,11 +579,12 @@ function renderHome(){
   const ytS=ytd.reduce((a,r)=>a+r.price,0),ytM=ytd.reduce((a,r)=>a+r.margin,0),ytO=ytd.filter(r=>r.type==='메인').length;
   const mp=mS>0?mM/mS:0,ymp=ytS>0?ytM/ytS:0;
 
+  const mDailyAvg = td > 0 ? Math.round(mS / td) : 0;
   document.getElementById('kpiMtd').innerHTML=`
     <div class="kpi bl"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Sales</div><div class="kv">${fS(mS)}</div><div class="ks">${fmt(mS)}원</div>${dd(mS,yS,'vs YoY',pS,'vs MoM')}</div>
-    <div class="kpi gr"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Margin</div><div class="kv">${fS(mM)}</div><div class="ks">${fP(mp)}</div>${dd(mM,yM,'vs YoY',pM,'vs MoM')}</div>
-    <div class="kpi am"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Orders</div><div class="kv">${fmt(mO)}</div><div class="ks">Avg. ${fS(mO?mS/mO:0)}원</div>${dd(mO,yO,'vs YoY',pO,'vs MoM')}</div>
-    <div class="kpi pu"><div class="kpi-deco"></div><div class="kl">Margin Rate</div><div class="kv">${fP(mp)}</div><div class="ks">&nbsp;</div></div>
+    <div class="kpi gr"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Margin</div><div class="kv">${fmt(mM)}원</div><div class="ks">${fP(mp)}</div>${dd(mM,yM,'vs YoY',pM,'vs MoM')}</div>
+    <div class="kpi am"><div class="kpi-deco"></div><div class="kl">일평균 매출 (${td}일 기준)</div><div class="kv">${fS(mDailyAvg)}</div><div class="ks">${fmt(mDailyAvg)}원</div></div>
+    <div class="kpi pu"><div class="kpi-deco"></div><div class="kl">${yr}년 ${mo}월 Orders</div><div class="kv">${fmt(mO)}건</div><div class="ks">Avg. ${fS(mO?mS/mO:0)}원</div></div>
   `;
   document.getElementById('kpiYtd').innerHTML=`
     <div class="kpi wh"><div class="kl">${yr} YTD (연누계) Sales</div><div class="kv">${fS(ytS)}</div><div class="ks">${fmt(ytS)}원</div></div>
@@ -646,6 +655,43 @@ function renderHome(){
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:36}},
       plugins:{legend:{display:false},datalabels:{}},
       scales:{x:bX,y:{...bY,grid:{display:false},position:'left'},y2:{position:'right',grid:{display:false},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>v.toFixed(1)+'%'}}}}
+  });
+
+  // 월별 일평균 YoY 차트
+  const todayY=ty(),todayM=tm(),todayD=new Date().getDate();
+  function calDays(year,month){
+    // 당월 진행중이면 오늘까지, 아니면 해당 월 총 일수
+    if(year===todayY&&month===todayM) return todayD;
+    return new Date(year,month,0).getDate();
+  }
+  const avgYears=[...new Set(RAW.map(r=>Number(r.year)))].filter(Boolean).sort();
+  const avgMos=[1,2,3,4,5,6,7,8,9,10,11,12];
+  const avgColors={'2025':'#94A3B8','2026':'#2563EB','2027':'#059669'};
+  const avgDatasets=avgYears.map((y,i)=>({
+    label:`${y}`,
+    data:avgMos.map(m=>{
+      const total=RAW.filter(r=>Number(r.year)===y&&Number(r.month)===m).reduce((a,r)=>a+r.price,0);
+      if(!total)return null;
+      const days=calDays(y,m);
+      return days>0?Math.round(total/days):null;
+    }),
+    backgroundColor:(avgColors[y]||C[i])+'22',
+    borderColor:avgColors[y]||C[i],
+    borderWidth:1.5,
+    categoryPercentage:.7,
+    barPercentage:.45,
+    datalabels:{display:ctx=>ctx.dataset.data[ctx.dataIndex]!=null&&ctx.dataset.data[ctx.dataIndex]>0,
+      color:avgColors[y]||C[i],font:{size:10,weight:'700',family:'Inter,sans-serif'},
+      anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}
+  }));
+  document.getElementById('dailyAvgLeg').innerHTML=avgYears.map(y=>`<span class="li"><span class="ld" style="background:${avgColors[y]||'#94A3B8'}"></span>${y}년</span>`).join('');
+  dc('dailyAvgYoyChart');
+  charts.dailyAvgYoyChart=new Chart(document.getElementById('dailyAvgYoyChart'),{
+    type:'bar',
+    data:{labels:avgMos.map(m=>mEn(m)),datasets:avgDatasets},
+    options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28}},
+      plugins:{legend:{display:false},datalabels:{}},
+      scales:{x:bX,y:{...bY,grid:{display:false}}}}
   });
 }
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOUNDGLUCK Dashboard v3.3</title>
+<title>SOUNDGLUCK Dashboard v3.4</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
@@ -106,7 +106,7 @@ select:focus{border-color:var(--blue)}
 .h300{height:300px}.h320{height:320px}.h360{height:360px}.h400{height:400px}.h440{height:440px}
 
 /* TABLE */
-.tw{overflow-x:auto}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse}
 th{background:#F8FAFC;color:var(--text3);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1.5px solid var(--border)}
 td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)}
@@ -147,8 +147,73 @@ tr:hover td{background:#F8FAFC}
 
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── PC 중간 브레이크포인트 ── */
 @media(max-width:1100px){.g2,.g3,.g31,.g13{grid-template-columns:1fr}}
-@media(max-width:768px){.hdr{padding:0 16px;gap:12px}.main{padding:16px}.kv{font-size:22px}}
+
+/* ── 모바일 ── */
+@media(max-width:768px){
+  /* 헤더: 2줄 구조 */
+  header{height:auto}
+  .hdr{
+    height:auto;
+    flex-wrap:wrap;
+    padding:10px 12px;
+    gap:0;
+    row-gap:8px;
+  }
+  .logo{flex:1}
+  /* 탭: 1번째 줄 전체 폭 */
+  nav{
+    order:2;
+    width:100%;
+    flex:none;
+    padding-bottom:2px;
+  }
+  .tab{padding:6px 10px;font-size:12px}
+  /* 필터/버튼: 2번째 줄 */
+  .hdr-right{
+    order:1;
+    flex:none;
+    margin-left:auto;
+    gap:6px;
+  }
+  .fl{display:none}   /* "Year" "Month" 텍스트 숨김 */
+  select{padding:5px 7px;font-size:12px}
+  .upd{display:none}  /* 업데이트 시각 숨김 */
+  .ver-btn{padding:4px 8px;font-size:11px}
+  .btn-r{padding:5px 12px;font-size:12px}
+
+  /* ver-panel 모바일 위치 보정 */
+  .ver-panel{right:0;min-width:240px;max-width:calc(100vw - 24px)}
+
+  /* 본문 */
+  .main{padding:12px}
+
+  /* KPI: 2열 그리드 */
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .kpi{padding:14px 12px 12px}
+  .kl{font-size:10px}
+  .kv{font-size:20px}
+  .ks{font-size:11px}
+  .kd{font-size:10px;padding:2px 5px}
+
+  /* 카드 */
+  .ch{padding:14px 14px 0}
+  .ct{font-size:13px}
+  .cb{padding:12px 14px 14px}
+
+  /* 차트 높이 축소 */
+  .h200{height:160px}.h240{height:180px}.h260{height:200px}.h280{height:220px}
+  .h300{height:240px}.h320{height:250px}.h360{height:280px}.h400{height:300px}.h440{height:320px}
+
+  /* 테이블 */
+  th{padding:8px 10px;font-size:10px}
+  td{padding:9px 10px;font-size:12px}
+
+  /* 레이아웃 */
+  .g2,.g3,.g31,.g13{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -190,9 +255,10 @@ tr:hover td{background:#F8FAFC}
       </select>
       <span class="upd" id="upd">—</span>
       <div class="ver-wrap">
-        <button class="ver-btn" onclick="document.getElementById('vp').classList.toggle('open')">v3.3</button>
+        <button class="ver-btn" onclick="document.getElementById('vp').classList.toggle('open')">v3.4</button>
         <div class="ver-panel" id="vp">
-          <div class="vr"><div class="vt"><span class="vbg M">v3.3</span><span class="vd">2026-06-19</span></div><div class="vdesc">KPI 개편: 풀마진+마진율 / 일평균매출 / 오더건수 · 월별 일평균 YoY 차트 추가</div></div>
+          <div class="vr"><div class="vt"><span class="vbg M">v3.4</span><span class="vd">2026-06-23</span></div><div class="vdesc">모바일 반응형 추가: 2줄 헤더, KPI 2열, 차트 높이 축소, 테이블 터치 스크롤</div></div>
+          <div class="vr"><div class="vt"><span class="vbg m">v3.3</span><span class="vd">2026-06-19</span></div><div class="vdesc">KPI 개편: 풀마진+마진율 / 일평균매출 / 오더건수 · 월별 일평균 YoY 차트 추가</div></div>
           <div class="vr"><div class="vt"><span class="vbg m">v3.2</span><span class="vd">2026-06-16</span></div><div class="vdesc">Outbound date daily chart · Layout overhaul · Top nav · YoY chart in Top10</div></div>
           <div class="vr"><div class="vt"><span class="vbg m">v3.1</span><span class="vd">2026-06-16</span></div><div class="vdesc">White theme · Inter font · Filled KPI · No grid lines</div></div>
           <div class="vr"><div class="vt"><span class="vbg m">v2.2</span><span class="vd">2026-06-16</span></div><div class="vdesc">Channel normalization · YoY same-period</div></div>
@@ -442,7 +508,7 @@ function startLoad(){
   el.textContent='...';
   window._loadInterval=setInterval(()=>{
     n++;
-    b.style.width=Math.min(n*3,90)+'%'; // 최대 90%까지만 (완료시 100%)
+    b.style.width=Math.min(n*3,90)+'%';
     const mi=Math.floor(n/5);
     if(mi<msgs.length)m.textContent=msgs[mi];
   },300);
@@ -569,7 +635,6 @@ function renderHome(){
   const ysp=RAW.filter(r=>Number(r.yearMonth)===yoyYm);
   const ytd=RAW.filter(r=>Number(r.year)===yr);
 
-  // 전월/전년 동기간 비교
   const pspT=psp.filter(r=>parseInt((r.outDate||r.date||'').split('-')[2]||'99')<=td);
   const yspT=ysp.filter(r=>parseInt((r.outDate||r.date||'').split('-')[2]||'99')<=td);
 
@@ -593,7 +658,6 @@ function renderHome(){
     <div class="kpi wh"><div class="kl">Avg. (평균) Order Value</div><div class="kv">${fS(ytO?ytS/ytO:0)}</div><div class="ks">&nbsp;</div></div>
   `;
 
-  // Channel bar (horizontal)
   const chM={};
   mtd.forEach(r=>{const ch=nCh(r.channel);if(!ch)return;if(!chM[ch])chM[ch]=0;chM[ch]+=r.price;});
   const chD=Object.entries(chM).sort((a,b)=>b[1]-a[1]);
@@ -605,15 +669,12 @@ function renderHome(){
       plugins:{legend:{display:false},datalabels:{}},scales:{x:{...bX,grid:{display:false}},y:bYn}}
   });
 
-  // Daily chart - 출고일(outDate) 기준, 오늘까지만
   const dm={};
   mtd.forEach(r=>{
-    // outDate가 있으면 출고일, 없으면 주문일 fallback
     const rawDate=r.outDate||r.date||'';
     if(!rawDate)return;
     const parts=rawDate.split('-');
     if(parts.length<3)return;
-    // 출고일이 당월에 해당하는지 확인
     const outYr=parseInt(parts[0]),outMo=parseInt(parts[1]),outDay=parseInt(parts[2]);
     if(outYr!==yr||outMo!==mo)return;
     if(outDay>td)return;
@@ -637,7 +698,6 @@ function renderHome(){
       scales:{x:bX,y:{...bY,grid:{display:false},position:'left'},y2:{position:'right',grid:{display:false},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>fS(v)}}}}
   });
 
-  // Monthly chart
   const{year:yr2}=gf();
   const mrows=yr2?RAW.filter(r=>Number(r.year)===yr2):RAW;
   const mn=gYm(mrows);
@@ -657,10 +717,8 @@ function renderHome(){
       scales:{x:bX,y:{...bY,grid:{display:false},position:'left'},y2:{position:'right',grid:{display:false},border:{display:false},ticks:{color:'#64748B',font:{size:12},callback:v=>v.toFixed(1)+'%'}}}}
   });
 
-  // 월별 일평균 YoY 차트
   const todayY=ty(),todayM=tm(),todayD=new Date().getDate();
   function calDays(year,month){
-    // 당월 진행중이면 오늘까지, 아니면 해당 월 총 일수
     if(year===todayY&&month===todayM) return todayD;
     return new Date(year,month,0).getDate();
   }
@@ -952,7 +1010,6 @@ function renderTop10(){
   const top10S=[...allCurr].sort((a,b)=>b.sales-a.sales).slice(0,10);
   const top10M=[...allCurr].sort((a,b)=>b.margin-a.margin).slice(0,10);
 
-  // YoY 비교 차트
   function yoyBarChart(cid,top10,valKey,currColor){
     dc(cid);
     const labs=top10.map(r=>r.model.length>12?r.model.slice(0,11)+'…':r.model);
@@ -974,7 +1031,6 @@ function renderTop10(){
   yoyBarChart('top10SalesCompChart',top10S,'sales','#2563EB');
   yoyBarChart('top10MgnCompChart',top10M,'margin','#059669');
 
-  // Sales 비교 테이블
   document.getElementById('top10CompTbody').innerHTML=top10S.map((r,i)=>{
     const pv=(prevMap[r.model]||{}).sales||0;
     const rc=i===0?'rk r1':i===1?'rk r2':i===2?'rk r3':'rk';

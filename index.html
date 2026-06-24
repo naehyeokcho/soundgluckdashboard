@@ -203,9 +203,6 @@ tr:hover td{background:#F8FAFC}
   .ct{font-size:13px}
   .cb{padding:12px 14px 14px}
 
-  /* 차트 컨테이너 오버플로우 차단 (datalabels 삐져나옴 방지) */
-  .cb{overflow:hidden}
-
   /* 차트 높이 축소 */
   .h200{height:160px}.h240{height:180px}.h260{height:200px}.h280{height:220px}
   .h300{height:240px}.h320{height:250px}.h360{height:280px}.h400{height:300px}.h440{height:320px}
@@ -1015,6 +1012,7 @@ function renderTop10(){
 
   function yoyBarChart(cid,top10,valKey,currColor){
     dc(cid);
+    const isMob=window.innerWidth<768;
     const labs=top10.map(r=>r.model.length>12?r.model.slice(0,11)+'…':r.model);
     const cVals=top10.map(r=>r[valKey]);
     const pVals=top10.map(r=>(prevMap[r.model]||{})[valKey]||0);
@@ -1022,11 +1020,11 @@ function renderTop10(){
       type:'bar',
       data:{labels:labs,datasets:[
         {label:`${yr-1}`,data:pVals,backgroundColor:'rgba(148,163,184,.3)',borderColor:'#94A3B8',borderWidth:1.5,categoryPercentage:.75,barPercentage:.45,
-          datalabels:{display:ctx=>pVals[ctx.dataIndex]>0,color:'#64748B',font:{size:10,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}},
+          datalabels:{display:isMob?false:ctx=>pVals[ctx.dataIndex]>0,color:'#64748B',font:{size:10,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}},
         {label:`${yr}`,data:cVals,backgroundColor:currColor+'22',borderColor:currColor,borderWidth:1.5,categoryPercentage:.75,barPercentage:.45,
-          datalabels:{display:ctx=>cVals[ctx.dataIndex]>0,color:currColor,font:{size:10,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}}
+          datalabels:{display:isMob?false:ctx=>cVals[ctx.dataIndex]>0,color:currColor,font:{size:10,weight:'700',family:'Inter,sans-serif'},anchor:'end',align:'top',formatter:v=>fS(v),clamp:true}}
       ]},
-      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:28}},
+      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:isMob?4:28}},
         plugins:{legend:{display:false},datalabels:{}},
         scales:{x:bX,y:{...bY,grid:{display:false}}}}
     });
